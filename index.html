@@ -31,6 +31,11 @@
     <h1>Know what you actually got paid.</h1>
     <p class="sub">Photograph your sale slip. SlipCheck reads it <b>on this phone</b>, checks every line, and circles anything that doesn't add up.</p>
     <label class="btn primary" for="photo">Take photo</label>
+    <ul class="tips" aria-label="How to take a good photo">
+      <li><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 30 24 22l16 8-16 8z"/><path d="M14 27V12h20v15"/></svg><b>Flat</b><span>on a table, no folds</span></li>
+      <li><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="20" r="7"/><path d="M24 5v4M24 31v4M9 20h4M35 20h4M13.4 9.4l2.8 2.8M31.8 27.8l2.8 2.8M13.4 30.6l2.8-2.8M31.8 12.2l2.8-2.8"/><path d="M12 42h24"/></svg><b>Bright</b><span>daylight, no shadow</span></li>
+      <li><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="13" y="8" width="22" height="30" rx="2"/><path d="M6 6v8M6 6h8M42 6v8M42 6h-8M6 42v-8M6 42h8M42 42v-8M42 42h-8"/></svg><b>Whole slip</b><span>straight on, all edges in</span></li>
+    </ul>
     <button id="curSum" class="link cur-link" type="button">Currency</button>
     <input id="photo" type="file" accept="image/*" capture="environment" hidden>
     <div class="samples">
@@ -76,6 +81,7 @@
     <h2>Is the writing upright?</h2>
     <p class="sub">Turn the photo until you can read it. Sideways text cannot be read reliably.</p>
     <div class="photo-frame"><img id="checkImg" alt="Your slip" class="check"></div>
+    <p id="qualityHint" class="quality" hidden></p>
     <div class="row">
       <button id="turnL" class="btn" aria-label="Turn left">↺ Turn</button>
       <button id="turnR" class="btn" aria-label="Turn right">Turn ↻</button>
@@ -105,6 +111,11 @@
       <div id="stamp" class="stamp" hidden></div>
     </div>
     <div id="alerts"></div>
+    <div id="retakeTips" hidden><ul class="tips compact" aria-label="How to take a good photo">
+      <li><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 30 24 22l16 8-16 8z"/><path d="M14 27V12h20v15"/></svg><b>Flat</b><span>on a table, no folds</span></li>
+      <li><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="20" r="7"/><path d="M24 5v4M24 31v4M9 20h4M35 20h4M13.4 9.4l2.8 2.8M31.8 27.8l2.8 2.8M13.4 30.6l2.8-2.8M31.8 12.2l2.8-2.8"/><path d="M12 42h24"/></svg><b>Bright</b><span>daylight, no shadow</span></li>
+      <li><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="13" y="8" width="22" height="30" rx="2"/><path d="M6 6v8M6 6h8M42 6v8M42 6h-8M6 42v-8M6 42h8M42 42v-8M42 42h-8"/></svg><b>Whole slip</b><span>straight on, all edges in</span></li>
+    </ul></div>
     <button id="speak" class="btn primary speak">🔊 Read it to me</button>
     <div class="row">
       <button id="again" class="btn">Scan another</button>

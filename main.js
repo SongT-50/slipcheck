@@ -1,6 +1,6 @@
 import { reconcile } from './reconcile.js';
 import { onDeviceStatus, extractSlip } from './extract.js';
-import { guessTurns, turn } from './orient.js';
+import { guessTurns, turn, photoQuality } from './orient.js';
 import { saveSlip, updateSlip, listSlips, clearSlips, thumbnail } from './history.js';
 import { buildLedger } from './ledger.js';
 import { script, speak, stopSpeaking } from './speak.js';
@@ -54,6 +54,11 @@ let chk = null; // { bmp, turns, url }
 async function check(file) {
   const bmp = await createImageBitmap(file); // applies the camera's EXIF orientation
   chk = { bmp, turns: guessTurns(bmp), url: null };
+  const q = photoQuality(bmp);
+  const msg = q.blurry && q.dark ? 'This photo looks dark and blurry. Retake it in daylight, holding the phone still.'
+    : q.blurry ? 'This photo looks blurry. Hold the phone still and tap the screen to focus, then retake.'
+    : q.dark ? 'This photo looks dark. Move to daylight or turn on a light, then retake.' : '';
+  $('qualityHint').textContent = msg; $('qualityHint').hidden = !msg;
   await drawCheck();
   show('s-check');
 }
@@ -259,10 +264,12 @@ function render(r, meta = {}) {
     $('checksSum').parentElement.hidden = true;   // no stale "5/6 checks" from the previous slip
     $('explain').hidden = true;                   // nothing verified to explain
     $('paper').classList.add('retake');
+    $('retakeTips').hidden = false;
     stamp('grey', 'Retake');
     show('s-result'); return;
   }
   $('paper').classList.remove('retake');
+  $('retakeTips').hidden = true;
   $('checksSum').parentElement.hidden = false;
   $('explain').hidden = false;
   const pct = (v) => ((100 * v) / r.gross).toFixed(1) + '%';

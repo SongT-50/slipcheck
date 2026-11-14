@@ -41,3 +41,29 @@ export async function turn(bmp, turns) {
   x.drawImage(bmp, -bmp.width / 2, -bmp.height / 2);
   return c.convertToBlob({ type: 'image/jpeg', quality: 0.92 });
 }
+
+/**
+ * Photo quality hint, measured on a 640px greyscale copy (same method as the calibration on 11/14):
+ * sharpness = variance of the Laplacian. Real phone photos measured 941–1,561, mildly blurred tests 504–628 (read fine),
+ * heavily blurred tests 52–89 (mostly asked for a retake) → "blurry" below 200.
+ * brightness = mean grey. No dark photo in the test set yet, so "dark" only below 110 (darkest test was 124).
+ * A hint only: it never blocks reading.
+ */
+export function photoQuality(bmp) {
+  const k = 640 / Math.max(bmp.width, bmp.height);
+  const w = Math.max(1, Math.round(bmp.width * k)), h = Math.max(1, Math.round(bmp.height * k));
+  const c = new OffscreenCanvas(w, h);
+  const x = c.getContext('2d', { willReadFrequently: true });
+  x.drawImage(bmp, 0, 0, w, h);
+  const d = x.getImageData(0, 0, w, h).data;
+  const g = new Float32Array(w * h);
+  let sum = 0;
+  for (let i = 0; i < w * h; i++) { g[i] = 0.299 * d[4 * i] + 0.587 * d[4 * i + 1] + 0.114 * d[4 * i + 2]; sum += g[i]; }
+  let n = 0, m = 0, m2 = 0;
+  for (let y = 1; y < h - 1; y++) for (let i = 1; i < w - 1; i++) {
+    const p = y * w + i, v = 4 * g[p] - g[p - w] - g[p + w] - g[p - 1] - g[p + 1];
+    n++; m += v; m2 += v * v;
+  }
+  const sharpness = n ? m2 / n - (m / n) ** 2 : 0, brightness = sum / (w * h);
+  return { sharpness, brightness, blurry: sharpness < 200, dark: brightness < 110 };
+}
