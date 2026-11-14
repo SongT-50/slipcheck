@@ -156,7 +156,7 @@ export function explainText(r, w) {
         .replace('{charged}', money(d.amount)));
     }
   });
-  lines.push('', `${w.you_received}: ${money(r.net)}`, `${w.share}: ${((100 * r.net) / r.gross).toFixed(1)}%`);
+  lines.push('', `${t('youReceived')}: ${money(r.net)}`, `${w.share}: ${((100 * r.net) / r.gross).toFixed(1)}%`);
   return lines.join(String.fromCharCode(10));
 }
 window.SLIPCHECK_EXPLAIN = { explainText }; // for testing
