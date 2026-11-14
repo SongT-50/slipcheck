@@ -10,6 +10,6 @@ export const firebaseConfig = {
   appId: '1:216710900485:web:7f59aad1a80d872f9b656c',
 };
 
-// reCAPTCHA Enterprise (Fraud Defense) site key for App Check on the hosted site (public by design). Empty until created;
+// reCAPTCHA Enterprise (Fraud Defense) site key for App Check on the hosted site (public by design: it ships in the page).
 // on localhost a debug token is used instead.
-export const recaptchaSiteKey = '';
+export const recaptchaSiteKey = '6LcvlB8uAAAAAFyJFfKwpsTKiEOuFQfGwaafsT6G';
