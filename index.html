@@ -28,18 +28,18 @@
         <div class="stamp red mini-stamp">Check 1 line</div>
       </div>
     </div>
-    <h1>Know what you actually got paid.</h1>
-    <p class="sub">Photograph your sale slip. SlipCheck reads it <b>on this phone</b>, checks every line, and circles anything that doesn't add up.</p>
-    <label class="btn primary" for="photo">Take photo</label>
+    <h1 data-i18n="tagline">Know what you actually got paid.</h1>
+    <p class="sub" data-i18n-html="scanSub"></p>
+    <label class="btn primary" for="photo" data-i18n="takePhoto">Take photo</label>
     <ul class="tips" aria-label="How to take a good photo">
-      <li><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 30 24 22l16 8-16 8z"/><path d="M14 27V12h20v15"/></svg><b>Flat</b><span>on a table, no folds</span></li>
-      <li><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="20" r="7"/><path d="M24 5v4M24 31v4M9 20h4M35 20h4M13.4 9.4l2.8 2.8M31.8 27.8l2.8 2.8M13.4 30.6l2.8-2.8M31.8 12.2l2.8-2.8"/><path d="M12 42h24"/></svg><b>Bright</b><span>daylight, no shadow</span></li>
-      <li><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="13" y="8" width="22" height="30" rx="2"/><path d="M6 6v8M6 6h8M42 6v8M42 6h-8M6 42v-8M6 42h8M42 42v-8M42 42h-8"/></svg><b>Whole slip</b><span>straight on, all edges in</span></li>
+      <li><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 30 24 22l16 8-16 8z"/><path d="M14 27V12h20v15"/></svg><b data-i18n="tipFlat">Flat</b><span data-i18n="tipFlatSub">on a table, no folds</span></li>
+      <li><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="20" r="7"/><path d="M24 5v4M24 31v4M9 20h4M35 20h4M13.4 9.4l2.8 2.8M31.8 27.8l2.8 2.8M13.4 30.6l2.8-2.8M31.8 12.2l2.8-2.8"/><path d="M12 42h24"/></svg><b data-i18n="tipBright">Bright</b><span data-i18n="tipBrightSub">daylight, no shadow</span></li>
+      <li><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="13" y="8" width="22" height="30" rx="2"/><path d="M6 6v8M6 6h8M42 6v8M42 6h-8M6 42v-8M6 42h8M42 42v-8M42 42h-8"/></svg><b data-i18n="tipWhole">Whole slip</b><span data-i18n="tipWholeSub">straight on, all edges in</span></li>
     </ul>
     <button id="curSum" class="link cur-link" type="button">Currency</button>
     <input id="photo" type="file" accept="image/*" capture="environment" hidden>
     <div class="samples">
-      <span>Or try a sample slip:</span>
+      <span data-i18n="trySample">Or try a sample slip:</span>
       <button data-sample="samples/slip_ko_mismatch.png" data-cur="KRW|₩">Korea</button>
       <button data-sample="samples/slip_en.png" data-cur="INR|Rs.">India</button>
       <button data-sample="samples/slip_es.png" data-cur="MXN|$">Mexico</button>
@@ -49,19 +49,22 @@
   <!-- History -->
   <section id="s-history" class="screen" hidden>
     <div id="history">
-      <h2>Your past slips</h2>
-      <p class="hint">Saved on this device only.</p>
-      <button id="seasonBtn" class="season-card" hidden><span class="sc-k">This season</span><b id="seasonPeek">Where did my money go?</b><span class="sc-go">Open the ledger →</span></button>
+      <h2 data-i18n="pastSlips">Your past slips</h2>
+      <p class="hint" data-i18n="savedHere">Saved on this device only.</p>
+      <button id="seasonBtn" class="season-card" hidden><span class="sc-k" data-i18n="thisSeason">This season</span><b id="seasonPeek">Where did my money go?</b><span class="sc-go" data-i18n="openLedger">Open the ledger →</span></button>
       <ul id="histList" class="hist"></ul>
-      <button id="histClear" class="link">Delete all</button>
+      <button id="histClear" class="link" data-i18n="deleteAll">Delete all</button>
     </div>
-    <p id="histEmpty" class="hint" hidden>No slips yet. Take a photo of a slip, or try a sample on the Scan tab.</p>
+    <p id="histEmpty" class="hint" hidden data-i18n="noSlips"></p>
   </section>
 
   <!-- Settings -->
   <section id="s-settings" class="screen" hidden>
-    <h2>Settings</h2>
-    <label class="field">Currency
+    <h2 data-i18n="settings">Settings</h2>
+    <label class="field"><span data-i18n="language">Language</span>
+      <select id="uiLang"></select>
+    </label>
+    <label class="field"><span data-i18n="currency">Currency</span>
       <select id="currency">
         <option value="KRW|₩">₩ Korean won</option>
         <option value="INR|Rs.">Rs. Indian rupee</option>
@@ -71,37 +74,37 @@
     </label>
     <p id="device" class="hint"></p>
     <div class="about">
-      <p><b>Private by default.</b> Slips are read on this device whenever it has on-device AI. A photo goes to the cloud only if you agree: when this device can't read it, or when its reading can't be verified. Saved slips stay on this phone. Explain sends only line names, never the photo or the amounts.</p>
-      <p>SlipCheck checks arithmetic. It does not judge whether a fee is fair.</p>
+      <p data-i18n-html="about1"></p>
+      <p data-i18n="about2"></p>
     </div>
   </section>
 
   <!-- Ask before a photo leaves the device -->
   <section id="s-consent" class="screen slip-screen" hidden>
     <div class="paper">
-      <div class="paper-head"><span>READ IN THE CLOUD?</span><span id="consentWhy"></span></div>
+      <div class="paper-head"><span data-i18n="consentHead">READ IN THE CLOUD?</span><span id="consentWhy"></span></div>
       <p id="consentText" class="consent-text"></p>
       <ul class="consent-list">
-        <li>Only this photo is sent, once, through Firebase to Gemini.</li>
-        <li>SlipCheck does not store it. Your history stays on this phone.</li>
-        <li>The cloud's reading must pass the same arithmetic checks before you see a number.</li>
+        <li data-i18n="consent1"></li>
+        <li data-i18n="consent2"></li>
+        <li data-i18n="consent3"></li>
       </ul>
     </div>
-    <button id="cloudYes" class="btn cloud">Read it in the cloud</button>
-    <button id="cloudNo" class="btn">Not now</button>
+    <button id="cloudYes" class="btn cloud" data-i18n="cloudYes">Read it in the cloud</button>
+    <button id="cloudNo" class="btn" data-i18n="cloudNo">Not now</button>
   </section>
 
   <!-- Check the photo (orientation) -->
   <section id="s-check" class="screen" hidden>
-    <h2>Is the writing upright?</h2>
-    <p class="sub">Turn the photo until you can read it. Sideways text cannot be read reliably.</p>
+    <h2 data-i18n="checkTitle">Is the writing upright?</h2>
+    <p class="sub" data-i18n="checkSub"></p>
     <div class="photo-frame"><img id="checkImg" alt="Your slip" class="check"></div>
     <p id="qualityHint" class="quality" hidden></p>
     <div class="row">
-      <button id="turnL" class="btn" aria-label="Turn left">↺ Turn</button>
-      <button id="turnR" class="btn" aria-label="Turn right">Turn ↻</button>
+      <button id="turnL" class="btn" aria-label="Turn left" data-i18n="turnL">↺ Turn</button>
+      <button id="turnR" class="btn" aria-label="Turn right" data-i18n="turnR">Turn ↻</button>
     </div>
-    <button id="readIt" class="btn primary">Read this slip</button>
+    <button id="readIt" class="btn primary" data-i18n="readIt">Read this slip</button>
   </section>
 
   <!-- Reading -->
@@ -121,21 +124,21 @@
     <div class="paper" id="paper">
       <div class="paper-head"><span>SLIPCHECK</span><span id="where"></span></div>
       <ul id="lines" class="lines"></ul>
-      <div class="total-row"><span>You received</span><b id="netAmt"></b></div>
+      <div class="total-row"><span data-i18n="youReceived">You received</span><b id="netAmt"></b></div>
       <p id="netSub" class="paper-sub"></p>
       <div id="stamp" class="stamp" hidden></div>
     </div>
     <div id="alerts"></div>
     <div id="retakeTips" hidden><ul class="tips compact" aria-label="How to take a good photo">
-      <li><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 30 24 22l16 8-16 8z"/><path d="M14 27V12h20v15"/></svg><b>Flat</b><span>on a table, no folds</span></li>
-      <li><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="20" r="7"/><path d="M24 5v4M24 31v4M9 20h4M35 20h4M13.4 9.4l2.8 2.8M31.8 27.8l2.8 2.8M13.4 30.6l2.8-2.8M31.8 12.2l2.8-2.8"/><path d="M12 42h24"/></svg><b>Bright</b><span>daylight, no shadow</span></li>
-      <li><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="13" y="8" width="22" height="30" rx="2"/><path d="M6 6v8M6 6h8M42 6v8M42 6h-8M6 42v-8M6 42h8M42 42v-8M42 42h-8"/></svg><b>Whole slip</b><span>straight on, all edges in</span></li>
+      <li><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 30 24 22l16 8-16 8z"/><path d="M14 27V12h20v15"/></svg><b data-i18n="tipFlat">Flat</b><span data-i18n="tipFlatSub">on a table, no folds</span></li>
+      <li><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="20" r="7"/><path d="M24 5v4M24 31v4M9 20h4M35 20h4M13.4 9.4l2.8 2.8M31.8 27.8l2.8 2.8M13.4 30.6l2.8-2.8M31.8 12.2l2.8-2.8"/><path d="M12 42h24"/></svg><b data-i18n="tipBright">Bright</b><span data-i18n="tipBrightSub">daylight, no shadow</span></li>
+      <li><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="13" y="8" width="22" height="30" rx="2"/><path d="M6 6v8M6 6h8M42 6v8M42 6h-8M6 42v-8M6 42h8M42 42v-8M42 42h-8"/></svg><b data-i18n="tipWhole">Whole slip</b><span data-i18n="tipWholeSub">straight on, all edges in</span></li>
     </ul></div>
-    <button id="cloudRetry" class="btn cloud" hidden>Read it in the cloud instead</button>
-    <button id="speak" class="btn primary speak">🔊 Read it to me</button>
+    <button id="cloudRetry" class="btn cloud" hidden data-i18n="cloudRetry">Read it in the cloud instead</button>
+    <button id="speak" class="btn primary speak" data-i18n="speak">🔊 Read it to me</button>
     <div class="row">
-      <button id="again" class="btn">Scan another</button>
-      <button id="explain" class="btn cloud">Explain (cloud)</button>
+      <button id="again" class="btn" data-i18n="again">Scan another</button>
+      <button id="explain" class="btn cloud" data-i18n="explain">Explain (cloud)</button>
     </div>
     <details><summary id="checksSum"></summary><ul id="checks" class="checks"></ul></details>
     <div id="stack" hidden></div><ul id="legend" hidden></ul>
@@ -144,40 +147,40 @@
   <!-- Season ledger -->
   <section id="s-season" class="screen slip-screen" hidden>
     <div class="paper ledger">
-      <div class="paper-head"><span>SEASON LEDGER</span><span id="seasonSub"></span></div>
-      <p class="ledger-k">Deductions took</p>
+      <div class="paper-head"><span data-i18n="ledgerHead">SEASON LEDGER</span><span id="seasonSub"></span></div>
+      <p class="ledger-k" data-i18n="ledgerTook">Deductions took</p>
       <div id="seasonDed" class="ledger-big"></div>
       <p id="seasonDedSub" class="paper-sub left"></p>
-      <h3 class="ledger-h">By line</h3>
+      <h3 class="ledger-h" data-i18n="byLine">By line</h3>
       <ul id="seasonLabels" class="bars"></ul>
       <div id="seasonAgentsWrap">
-        <h3 class="ledger-h">By agent · share of the sale deducted</h3>
+        <h3 class="ledger-h" data-i18n="byAgent">By agent · share of the sale deducted</h3>
         <ul id="seasonAgents" class="bars agents"></ul>
       </div>
-      <h3 class="ledger-h">Slip by slip</h3>
+      <h3 class="ledger-h" data-i18n="bySlip">Slip by slip</h3>
       <ul id="seasonSlips" class="slipline"></ul>
     </div>
     <div id="seasonFlag" class="alert" hidden></div>
-    <p class="hint">Added up on this phone from your verified slips. Nothing is uploaded.</p>
+    <p class="hint" data-i18n="ledgerNote"></p>
   </section>
 
   <!-- Screen 3: cloud explain -->
   <section id="s-cloud" class="screen slip-screen" hidden>
     <div class="paper note-paper">
-      <div class="paper-head"><span>WHAT EACH LINE IS FOR</span><span id="cloudHead">Explained in the cloud · only line names were sent</span></div>
+      <div class="paper-head"><span data-i18n="explainHead">WHAT EACH LINE IS FOR</span><span id="cloudHead">Explained in the cloud · only line names were sent</span></div>
       <p id="cloudMsg"></p>
     </div>
-    <button id="back" class="btn">Back</button>
+    <button id="back" class="btn" data-i18n="back">Back</button>
   </section>
 </main>
 
 <nav id="tabs" class="tabs" aria-label="Main">
-  <button data-tab="scan" aria-label="Scan" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.6-2.2h6.8L17 8h3v11H4z"/><circle cx="12" cy="13.2" r="3.6"/></svg><span>Scan</span></button>
-  <button data-tab="history" aria-label="History"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.4"/><path d="M12 7.5V12l3.2 2"/></svg><span>History</span></button>
-  <button data-tab="ledger" aria-label="Ledger"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h11a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6z"/><path d="M6 3.5v17M9.5 8h5M9.5 11.5h5M9.5 15h3"/></svg><span>Ledger</span></button>
-  <button data-tab="settings" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.2M12 18.3v2.2M3.5 12h2.2M18.3 12h2.2M6 6l1.6 1.6M16.4 16.4 18 18M6 18l1.6-1.6M16.4 7.6 18 6"/></svg><span>Settings</span></button>
+  <button data-tab="scan" aria-label="Scan" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.6-2.2h6.8L17 8h3v11H4z"/><circle cx="12" cy="13.2" r="3.6"/></svg><span data-i18n="tabScan">Scan</span></button>
+  <button data-tab="history" aria-label="History"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.4"/><path d="M12 7.5V12l3.2 2"/></svg><span data-i18n="tabHistory">History</span></button>
+  <button data-tab="ledger" aria-label="Ledger"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h11a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6z"/><path d="M6 3.5v17M9.5 8h5M9.5 11.5h5M9.5 15h3"/></svg><span data-i18n="tabLedger">Ledger</span></button>
+  <button data-tab="settings" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.2M12 18.3v2.2M3.5 12h2.2M18.3 12h2.2M6 6l1.6 1.6M16.4 16.4 18 18M6 18l1.6-1.6M16.4 7.6 18 6"/></svg><span data-i18n="tabSettings">Settings</span></button>
 </nav>
-<footer>Sample slips are fictional. SlipCheck checks arithmetic; it does not judge whether a fee is fair.</footer>
+<footer data-i18n="footer">Sample slips are fictional. SlipCheck checks arithmetic; it does not judge whether a fee is fair.</footer>
 <script type="module" src="main.js"></script>
 </body>
 </html>

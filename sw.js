@@ -1,9 +1,9 @@
 // SlipCheck service worker — the app opens with no signal.
 // Same-origin files: served from cache at once, refreshed in the background.
-const CACHE = 'slipcheck-v11';
+const CACHE = 'slipcheck-v12';
 const SDK = 'https://www.gstatic.com/firebasejs/13.2.0/';
 const SHELL = [
-  './', 'index.html', 'style.css', 'main.js', 'reconcile.js', 'extract.js', 'history.js', 'orient.js', 'ledger.js', 'speak.js',
+  './', 'index.html', 'style.css', 'main.js', 'reconcile.js', 'extract.js', 'history.js', 'orient.js', 'ledger.js', 'speak.js', 'i18n.js',
   'firebase.js', 'firebase-config.js',
   SDK + 'firebase-app.js', SDK + 'firebase-app-check.js', SDK + 'firebase-ai.js',
   'manifest.webmanifest', 'icon-192.png', 'icon-512.png',

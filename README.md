@@ -33,6 +33,7 @@ More, all on the device:
 - **It never accuses on a slip it could not verify.** If the lines and the printed totals cannot be reconciled, it reads once more; if it still cannot, it asks for a new photo instead of showing a number.
 - **Season ledger.** Every verified slip is added up: how much deductions took this season, by line and by agent.
 - **Read it to me.** The result is spoken in the farmer's language with the device's own voice. The sentences are built by code from the verified numbers.
+- **In the farmer's language.** Screens and read-aloud in English, 한국어, Español and हिन्दी (phone language by default, changeable in Settings). Labels on the slip stay as printed.
 
 SlipCheck checks arithmetic. It does not judge whether a fee is fair.
 

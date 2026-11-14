@@ -26,9 +26,17 @@ const T = {
     ok: 'Todas las cuentas cuadran.',
     retake: 'No se pudo leer bien la foto. Por favor, tómela de nuevo.',
   },
+  hi: {
+    got: (net) => `आपको ${net} मिले।`,
+    sold: (gross, ded, pct) => `बिक्री ${gross} की हुई। ${ded} काटे गए, यानी ${pct} प्रतिशत।`,
+    line: (label, amt) => `${label}: ${amt}।`,
+    bad: (label, stated, exp, amt) => `${label} देखिए। इस पर ${stated} प्रतिशत लिखा है, जो ${exp} होता है, पर ${amt} काटे गए।`,
+    ok: 'हर पंक्ति का हिसाब सही है।',
+    retake: 'यह फ़ोटो साफ़ नहीं पढ़ी जा सकी। कृपया फिर से लें।',
+  },
 };
-const CUR_WORD = { KRW: { ko: '원', en: 'won', es: 'wones' }, INR: { en: 'rupees', ko: '루피', es: 'rupias' },
-  MXN: { es: 'pesos', en: 'pesos', ko: '페소' }, USD: { en: 'dollars', ko: '달러', es: 'dólares' } };
+const CUR_WORD = { KRW: { ko: '원', en: 'won', es: 'wones', hi: 'वॉन' }, INR: { en: 'rupees', ko: '루피', es: 'rupias', hi: 'रुपये' },
+  MXN: { es: 'pesos', en: 'pesos', ko: '페소', hi: 'पेसो' }, USD: { en: 'dollars', ko: '달러', es: 'dólares', hi: 'डॉलर' } };
 
 export function pickLang(pref = navigator.language || 'en') {
   const l = pref.slice(0, 2).toLowerCase();
@@ -38,7 +46,7 @@ export function pickLang(pref = navigator.language || 'en') {
 /** Spoken amount: plain digits + currency word, so any voice reads it naturally. */
 function say(n, cur, lang) {
   const dec = cur === 'KRW' ? 0 : (Math.round(n) === n ? 0 : 2);
-  const num = n.toLocaleString(lang === 'ko' ? 'ko-KR' : lang === 'es' ? 'es-MX' : 'en-US', { maximumFractionDigits: dec, minimumFractionDigits: dec });
+  const num = n.toLocaleString(lang === 'ko' ? 'ko-KR' : lang === 'es' ? 'es-MX' : lang === 'hi' ? 'en-IN' : 'en-US', { maximumFractionDigits: dec, minimumFractionDigits: dec });
   return `${num} ${(CUR_WORD[cur] || {})[lang] || cur}`;
 }
 
@@ -55,7 +63,7 @@ export function script(r, cur, lang) {
   return out;
 }
 
-const LOCALE = { en: 'en', ko: 'ko', es: 'es' };
+const LOCALE = { en: 'en', ko: 'ko', es: 'es', hi: 'hi' };
 export function speak(lines, lang) {
   if (!('speechSynthesis' in self)) return false;
   speechSynthesis.cancel();
