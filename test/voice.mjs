@@ -5,12 +5,12 @@ const T = JSON.parse(readFileSync(new URL('../voice/clips.json', import.meta.url
 let pass = 0, fail = 0;
 const eq = (name, got, want) => { const ok = JSON.stringify(got) === JSON.stringify(want); ok ? pass++ : fail++; if (!ok) console.log('FAIL', name, got, want); };
 const say = (ids, lang) => ids.map((i) => ({ ...T[lang].numbers })[i]).join(' ');
-eq('ko 2,043,000', say(numberClips(2043000, 'ko'), 'ko'), '이백 사 만 삼천');
-eq('ko 24', say(numberClips(24, 'ko'), 'ko'), '이십사');
-eq('ko 10,000', say(numberClips(10000, 'ko'), 'ko'), '만');
-eq('ko 100,000,000', say(numberClips(100000000, 'ko'), 'ko'), '일 억');
-eq('ko 13.9', say(numberClips(13.9, 'ko', 1), 'ko'), '십삼 점 구');
-eq('ko 0', say(numberClips(0, 'ko'), 'ko'), '영');
+eq('ko 2,043,000', numberClips(2043000, 'ko'), ['x100_2_p', 'k4_p', 'man_p', 'x1000_3_f']);
+eq('ko 24', numberClips(24, 'ko'), ['k24_f']);
+eq('ko 10,000', numberClips(10000, 'ko'), ['man_f']);
+eq('ko 100,000,000', numberClips(100000000, 'ko'), ['k1_p', 'eok_f']);
+eq('ko 13.9', numberClips(13.9, 'ko', 1), ['k13_f', 'point', 'dd9']);
+eq('ko 0', numberClips(0, 'ko'), ['dd0']);
 eq('en 46,185', say(numberClips(46185, 'en'), 'en'), 'forty-six thousand one hundred eighty-five');
 eq('en 52,500.50', say(numberClips(52500.5, 'en', 2), 'en'), 'fifty-two thousand five hundred point five');
 eq('en 1,000,019', say(numberClips(1000019, 'en'), 'en'), 'one million nineteen');

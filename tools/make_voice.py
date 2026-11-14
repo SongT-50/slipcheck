@@ -49,7 +49,7 @@ def main():
     force = '--force' in sys.argv
     table = json.load(open(os.path.join(ROOT, 'voice', 'clips.json'), encoding='utf-8'))
     key = api_key()
-    for lang in args or ['ko', 'en']:
+    for lang in args or ['en']:   # Korean: tools/make_voice_ko.py (cut from whole sentences)
         t, out = table[lang], os.path.join(ROOT, 'voice', lang)
         os.makedirs(out, exist_ok=True)
         jobs = [(k, v, 'phrases') for k, v in t['phrases'].items()] + [(k, v, 'numbers') for k, v in t['numbers'].items()] \

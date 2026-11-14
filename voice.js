@@ -20,6 +20,16 @@ function koGroup(g) {           // 1..9999
   if (g % 100) out.push('k' + (g % 100));   // 1-99 recorded as whole words ("이십사")
   return out;
 }
+// Korean clips are cut from whole sentences (tools/make_voice_ko.py); each number unit has two takes:
+// _p (more of the number follows) and _f (the number ends here), so the tone runs on like speech.
+function koUnits(n) {
+  if (n === 0) return ['dd0'];
+  const eok = Math.floor(n / 1e8), man = Math.floor((n % 1e8) / 1e4), rest = n % 1e4, out = [];
+  if (eok) out.push(...koGroup(eok), 'eok');
+  if (man) out.push(...(man === 1 ? [] : koGroup(man)), 'man');
+  if (rest) out.push(...koGroup(rest));
+  return out.map((u, i) => u + (i === out.length - 1 ? '_f' : '_p'));
+}
 function koInt(n) {
   if (n === 0) return ['d0'];
   const eok = Math.floor(n / 1e8), man = Math.floor((n % 1e8) / 1e4), rest = n % 1e4, out = [];
@@ -48,11 +58,11 @@ function enInt(n) {
 export function numberClips(n, lang, decimals = 0) {
   const s = Math.abs(n).toFixed(decimals);
   const [i, f = ''] = s.split('.');
-  const ids = lang === 'ko' ? koInt(Number(i)) : enInt(Number(i));
+  const ids = lang === 'ko' ? koUnits(Number(i)) : enInt(Number(i));
   const frac = f.replace(/0+$/, '');
   if (frac) {
     ids.push('point');
-    for (const d of frac) ids.push(lang === 'ko' ? 'd' + d : 'w' + d);
+    for (const d of frac) ids.push(lang === 'ko' ? 'dd' + d : 'w' + d);
   }
   return ids;
 }
@@ -77,10 +87,12 @@ export function plan(r, cur, lang, T) {
   const pct = numberClips(Number(((100 * r.totalDeductions) / r.gross).toFixed(1)), lang, 1);
   const out = [];
   if (lang === 'ko') {
-    out.push('p_got', ...amt(r.net), 'p_end', '|', 'p_sold', ...amt(r.gross), 'p_end', '|',
-      'p_ded', ...amt(r.totalDeductions), 'p_end', '|', 'p_pct_pre', ...pct, 'p_pct', '|');
+    const c = ['KRW', 'INR', 'MXN', 'USD'].includes(cur) ? cur : 'KRW';
+    const num = (n) => numberClips(n, lang, dec(n));
+    out.push('p_got', ...num(r.net), `c_${c}_end`, '|', 'p_sold', ...num(r.gross), `c_${c}_end`, '|',
+      'p_ded', ...num(r.totalDeductions), `c_${c}_end`, '|', 'p_pct_pre', ...pct, 'p_pct', '|');
     for (const d of r.deductions) {
-      out.push(labelClip(d.label, T), ...amt(d.amount), '|');
+      out.push(labelClip(d.label, T), ...num(d.amount), `c_${c}_list`, '|');
       if (d.rateOk === false) out.push(labelClip(d.label, T), 'p_bad', '|');
     }
   } else {
