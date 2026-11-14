@@ -153,14 +153,15 @@ async function showHistory() {
   $('histList').innerHTML = '';
   for (const r of rows) {
     const cur = curSel.value; curSel.value = r.currency;           // format in the slip's own currency
-    const net = Number.isFinite(r.result?.net) ? money(r.result.net) : '—';
+    const verified = r.result && !r.result.unreliable && Number.isFinite(r.result.net);
+    const net = verified ? money(r.result.net) : '—';   // never show an unverified number
     curSel.value = cur;
     const flagged = r.result?.deductions?.some((d) => d.rateOk === false) || r.result?.warnings?.length;
     const src = r.thumb ? (thumbs[thumbs.push(URL.createObjectURL(r.thumb)) - 1]) : '';
     const li = document.createElement('li');
     li.innerHTML = `<button><img alt="" ${src ? `src="${src}"` : ''}><span><b>${esc(net)}</b>`
       + `<small>${new Date(r.ts).toLocaleString()}${r.explainPending ? ' · explain when online' : ''}</small></span>`
-      + `<span class="flag ${flagged ? '' : 'ok'}">${flagged ? 'Check' : 'OK'}</span></button>`;
+      + `<span class="flag ${verified && !flagged ? 'ok' : ''}">${!verified ? 'Retake' : flagged ? 'Check' : 'OK'}</span></button>`;
     li.querySelector('button').addEventListener('click', () => {
       curSel.value = r.currency; last = r; render(r.result, r);
     });
@@ -210,10 +211,14 @@ function render(r, meta = {}) {
   $('where').textContent = [WHERE[meta.source], meta.sec ? `${meta.sec.toFixed(0)} s` : ''].filter(Boolean).join(' · ');
   if (!Number.isFinite(r.net) || !r.items.length || r.unreliable) {
     $('netAmt').textContent = '—';
-    $('netSub').textContent = 'Could not read this slip. Try a flatter, brighter photo.';
+    $('netSub').textContent = 'Could not read this slip clearly, so SlipCheck shows no number. Lay it flat in good light and take the photo again.';
     $('stack').innerHTML = $('legend').innerHTML = $('alerts').innerHTML = $('checks').innerHTML = '';
+    $('checksSum').parentElement.hidden = true;   // no stale "5/6 checks" from the previous slip
+    $('explain').hidden = true;                   // nothing verified to explain
     show('s-result'); return;
   }
+  $('checksSum').parentElement.hidden = false;
+  $('explain').hidden = false;
   $('netAmt').textContent = money(r.net);
   const perKg = r.netPerKg ? ` · <b>${money(r.netPerKg)} / kg</b>` : '';
   $('netSub').innerHTML = `from ${money(r.gross)} sold${perKg}`;
