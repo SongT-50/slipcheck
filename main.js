@@ -9,15 +9,23 @@ import { script, speak, stopSpeaking } from './speak.js';
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 
 const $ = (id) => document.getElementById(id);
-const screens = ['s-scan', 's-check', 's-read', 's-result', 's-cloud', 's-season'];
-const show = (id) => { stopSpeaking(); screens.forEach((s) => ($(s).hidden = s !== id)); };
+const screens = ['s-scan', 's-check', 's-read', 's-result', 's-cloud', 's-season', 's-history', 's-settings'];
+// which bottom tab is lit for each screen
+const TAB_OF = { 's-history': 'history', 's-season': 'ledger', 's-settings': 'settings' };
+const show = (id) => {
+  stopSpeaking();
+  screens.forEach((s) => ($(s).hidden = s !== id));
+  const tab = TAB_OF[id] || 'scan';
+  document.querySelectorAll('#tabs button').forEach((b) => b.setAttribute('aria-current', b.dataset.tab === tab ? 'page' : 'false'));
+  scrollTo(0, 0);
+};
 const COLORS = ['#b23b3b', '#b7791f', '#2c5d8a', '#6b4f8a', '#8a6b2f', '#3f7f7f'];
 let last = null;
 
 // ---- currency (user setting, never guessed by the model) ----
 const curSel = $('currency');
 try { const c = localStorage.getItem('slipcheck.currency'); if (c) curSel.value = c; } catch (_) {}
-const curLabel = () => { $('curSum').textContent = 'Currency: ' + curSel.selectedOptions[0].textContent; };
+const curLabel = () => { $('curSum').textContent = 'Currency: ' + curSel.selectedOptions[0].textContent + ' · change'; };
 curSel.addEventListener('change', () => { curLabel(); try { localStorage.setItem('slipcheck.currency', curSel.value); } catch (_) {} });
 curLabel();
 const symbol = () => curSel.value.split('|')[1];
@@ -63,6 +71,15 @@ document.querySelectorAll('[data-sample]').forEach((b) => b.addEventListener('cl
   run(await (await fetch(b.dataset.sample)).blob());
 }));
 $('again').addEventListener('click', () => { showHistory(); show('s-scan'); });
+// ---- bottom tabs: always one tap to anywhere, instead of chains of Back ----
+document.querySelectorAll('#tabs button').forEach((b) => b.addEventListener('click', async () => {
+  const t = b.dataset.tab;
+  if (t === 'scan') show('s-scan');
+  else if (t === 'history') { await showHistory(); show('s-history'); }
+  else if (t === 'ledger') showSeason();
+  else show('s-settings');
+}));
+$('curSum').addEventListener('click', () => show('s-settings'));
 $('back').addEventListener('click', () => show('s-result'));
 $('explain').addEventListener('click', () => {
   if (navigator.onLine) {
@@ -145,7 +162,6 @@ async function showSeason() {
   show('s-season');
 }
 $('seasonBtn').addEventListener('click', showSeason);
-$('seasonBack').addEventListener('click', () => { showHistory(); show('s-scan'); });
 window.SLIPCHECK_SEASON = showSeason; // for testing
 
 // ---- history (IndexedDB, this device only) ----
@@ -154,6 +170,7 @@ async function showHistory() {
   const rows = await listSlips();
   thumbs.forEach(URL.revokeObjectURL); thumbs = [];
   $('history').hidden = !rows.length;
+  $('histEmpty').hidden = !!rows.length;
   $('seasonBtn').hidden = rows.length < 2;
   if (rows.length >= 2) {
     const L = buildLedger(await listSlips(500), curSel.value);

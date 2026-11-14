@@ -31,7 +31,31 @@
     <h1>Know what you actually got paid.</h1>
     <p class="sub">Photograph your sale slip. SlipCheck reads it <b>on this phone</b>, checks every line, and circles anything that doesn't add up.</p>
     <label class="btn primary" for="photo">Take photo</label>
-    <details class="cur"><summary id="curSum">Currency</summary>
+    <button id="curSum" class="link cur-link" type="button">Currency</button>
+    <input id="photo" type="file" accept="image/*" capture="environment" hidden>
+    <div class="samples">
+      <span>Or try a sample slip:</span>
+      <button data-sample="samples/slip_ko_mismatch.png" data-cur="KRW|₩">Korea</button>
+      <button data-sample="samples/slip_en.png" data-cur="INR|Rs.">India</button>
+      <button data-sample="samples/slip_es.png" data-cur="MXN|$">Mexico</button>
+    </div>
+  </section>
+
+  <!-- History -->
+  <section id="s-history" class="screen" hidden>
+    <div id="history">
+      <h2>Your past slips</h2>
+      <p class="hint">Saved on this device only.</p>
+      <button id="seasonBtn" class="season-card" hidden><span class="sc-k">This season</span><b id="seasonPeek">Where did my money go?</b><span class="sc-go">Open the ledger →</span></button>
+      <ul id="histList" class="hist"></ul>
+      <button id="histClear" class="link">Delete all</button>
+    </div>
+    <p id="histEmpty" class="hint" hidden>No slips yet. Take a photo of a slip, or try a sample on the Scan tab.</p>
+  </section>
+
+  <!-- Settings -->
+  <section id="s-settings" class="screen" hidden>
+    <h2>Settings</h2>
     <label class="field">Currency
       <select id="currency">
         <option value="KRW|₩">₩ Korean won</option>
@@ -40,21 +64,10 @@
         <option value="USD|$">$ US dollar</option>
       </select>
     </label>
-    </details>
-    <input id="photo" type="file" accept="image/*" capture="environment" hidden>
-    <div class="samples">
-      <span>Or try a sample slip:</span>
-      <button data-sample="samples/slip_ko_mismatch.png" data-cur="KRW|₩">Korea</button>
-      <button data-sample="samples/slip_en.png" data-cur="INR|Rs.">India</button>
-      <button data-sample="samples/slip_es.png" data-cur="MXN|$">Mexico</button>
-    </div>
     <p id="device" class="hint"></p>
-    <div id="history" hidden>
-      <h2>Your past slips</h2>
-      <p class="hint">Saved on this device only.</p>
-      <button id="seasonBtn" class="season-card" hidden><span class="sc-k">This season</span><b id="seasonPeek">Where did my money go?</b><span class="sc-go">Open the ledger →</span></button>
-      <ul id="histList" class="hist"></ul>
-      <button id="histClear" class="link">Delete all</button>
+    <div class="about">
+      <p><b>Private by default.</b> Photos are read on this phone. Saved slips stay on this phone. Only line names (never the photo or the amounts) go to the cloud, and only when you tap Explain.</p>
+      <p>SlipCheck checks arithmetic. It does not judge whether a fee is fair.</p>
     </div>
   </section>
 
@@ -119,7 +132,6 @@
     </div>
     <div id="seasonFlag" class="alert" hidden></div>
     <p class="hint">Added up on this phone from your verified slips. Nothing is uploaded.</p>
-    <button id="seasonBack" class="btn">Back</button>
   </section>
 
   <!-- Screen 3: cloud explain -->
@@ -132,6 +144,12 @@
   </section>
 </main>
 
+<nav id="tabs" class="tabs" aria-label="Main">
+  <button data-tab="scan" aria-label="Scan" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.6-2.2h6.8L17 8h3v11H4z"/><circle cx="12" cy="13.2" r="3.6"/></svg><span>Scan</span></button>
+  <button data-tab="history" aria-label="History"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.4"/><path d="M12 7.5V12l3.2 2"/></svg><span>History</span></button>
+  <button data-tab="ledger" aria-label="Ledger"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h11a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H6z"/><path d="M6 3.5v17M9.5 8h5M9.5 11.5h5M9.5 15h3"/></svg><span>Ledger</span></button>
+  <button data-tab="settings" aria-label="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.2M12 18.3v2.2M3.5 12h2.2M18.3 12h2.2M6 6l1.6 1.6M16.4 16.4 18 18M6 18l1.6-1.6M16.4 7.6 18 6"/></svg><span>Settings</span></button>
+</nav>
 <footer>Sample slips are fictional. SlipCheck checks arithmetic; it does not judge whether a fee is fair.</footer>
 <script type="module" src="main.js"></script>
 </body>

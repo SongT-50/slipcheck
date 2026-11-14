@@ -168,3 +168,17 @@ details.cur .field{margin-top:8px}
 .mini-stamp{top:-14px;right:-8px}
 .paper.ledger{background:var(--paper)}
 .paper.ledger .ledger-h{border-top:1px dashed var(--rule);padding-top:12px}
+
+/* ---- bottom tabs (from 태은's reference 11/14): one tap to anywhere, no chains of Back ---- */
+body{padding-bottom:calc(76px + env(safe-area-inset-bottom, 0px))}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-template-columns:repeat(4,1fr);background:var(--card);border-top:1px solid var(--line);
+  padding:6px max(8px, env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-left, 0px));box-shadow:0 -2px 10px rgba(0,0,0,.04)}
+.tabs button{display:grid;justify-items:center;gap:2px;background:none;border:0;padding:6px 0 4px;font:600 12px/1.2 system-ui,sans-serif;color:var(--muted);cursor:pointer;position:relative}
+.tabs svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tabs button[aria-current="page"]{color:var(--green)}
+.tabs button[aria-current="page"]::before{content:"";position:absolute;top:-7px;left:22%;right:22%;height:3px;border-radius:0 0 3px 3px;background:var(--green)}
+.tabs button:focus-visible{outline:2px solid var(--green);outline-offset:-2px;border-radius:8px}
+.cur-link{align-self:flex-start;font-size:13px;color:var(--muted)}
+.about{font-size:14px;color:var(--muted);display:grid;gap:6px;border-top:1px solid var(--line);padding-top:12px}
+.about p{margin:0}
+footer{padding-bottom:12px}
