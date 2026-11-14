@@ -65,6 +65,7 @@ export function script(r, cur, lang) {
 
 const LOCALE = { en: 'en', ko: 'ko', es: 'es', hi: 'hi' };
 export function speak(lines, lang) {
+  if (self.SlipNative) { self.SlipNative.speak(JSON.stringify(lines), lang); return true; } // Android: the phone's TTS
   if (!('speechSynthesis' in self)) return false;
   speechSynthesis.cancel();
   const voices = speechSynthesis.getVoices();
@@ -80,4 +81,4 @@ export function speak(lines, lang) {
   }
   return true;
 }
-export const stopSpeaking = () => { try { speechSynthesis.cancel(); } catch (_) {} };
+export const stopSpeaking = () => { try { if (self.SlipNative) self.SlipNative.stopSpeak(); else speechSynthesis.cancel(); } catch (_) {} };

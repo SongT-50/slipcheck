@@ -19,6 +19,7 @@
 <main>
   <!-- Screen 1: scan -->
   <section id="s-scan" class="screen">
+    <div id="intro">
     <div class="hero-slip" aria-hidden="true">
       <div class="paper mini">
         <div class="ml"><span>Sold</span><i></i><span>2,380,000</span></div>
@@ -30,12 +31,27 @@
     </div>
     <h1 data-i18n="tagline">Know what you actually got paid.</h1>
     <p class="sub" data-i18n-html="scanSub"></p>
+    </div>
+    <h1 id="homeHello" hidden data-i18n="homeHello">Got a new slip?</h1>
     <label class="btn primary" for="photo" data-i18n="takePhoto">Take photo</label>
     <ul class="tips" aria-label="How to take a good photo">
       <li><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 30 24 22l16 8-16 8z"/><path d="M14 27V12h20v15"/></svg><b data-i18n="tipFlat">Flat</b><span data-i18n="tipFlatSub">on a table, no folds</span></li>
       <li><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="20" r="7"/><path d="M24 5v4M24 31v4M9 20h4M35 20h4M13.4 9.4l2.8 2.8M31.8 27.8l2.8 2.8M13.4 30.6l2.8-2.8M31.8 12.2l2.8-2.8"/><path d="M12 42h24"/></svg><b data-i18n="tipBright">Bright</b><span data-i18n="tipBrightSub">daylight, no shadow</span></li>
       <li><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="13" y="8" width="22" height="30" rx="2"/><path d="M6 6v8M6 6h8M42 6v8M42 6h-8M6 42v-8M6 42h8M42 42v-8M42 42h-8"/></svg><b data-i18n="tipWhole">Whole slip</b><span data-i18n="tipWholeSub">straight on, all edges in</span></li>
     </ul>
+    <div id="home" hidden>
+      <button id="homeSeason" class="home-card" type="button">
+        <span class="hc-k" data-i18n="homeSeason">This season</span>
+        <span class="hc-nums">
+          <span><small data-i18n="recvLbl">Received</small><b id="hcRecv">—</b></span>
+          <span><small data-i18n="dedLbl">Deductions</small><b id="hcDed">—</b></span>
+          <span><small data-i18n="slipsLbl">Slips</small><b id="hcN">0</b></span>
+        </span>
+        <span id="hcFlag" class="hc-flag" hidden></span>
+      </button>
+      <div class="home-h"><span data-i18n="recent">Recent slips</span><button id="homeAll" class="link" type="button" data-i18n="seeAll">See all</button></div>
+      <ul id="homeList" class="hist"></ul>
+    </div>
     <button id="curSum" class="link cur-link" type="button">Currency</button>
     <input id="photo" type="file" accept="image/*" capture="environment" hidden>
     <div class="samples">

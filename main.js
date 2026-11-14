@@ -7,7 +7,7 @@ import { script, speak, stopSpeaking } from './speak.js';
 import { t, setLang, getLang, pickUiLang, applyI18n, LANGS } from './i18n.js';
 
 // ---- offline: cache the app so it opens with no signal ----
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+if ('serviceWorker' in navigator && !self.SlipNative) navigator.serviceWorker.register('sw.js').catch(() => {});
 
 const $ = (id) => document.getElementById(id);
 const screens = ['s-scan', 's-check', 's-read', 's-result', 's-cloud', 's-season', 's-history', 's-settings', 's-consent'];
@@ -19,6 +19,15 @@ const show = (id) => {
   const tab = TAB_OF[id] || 'scan';
   document.querySelectorAll('#tabs button').forEach((b) => b.setAttribute('aria-current', b.dataset.tab === tab ? 'page' : 'false'));
   scrollTo(0, 0);
+  if (id === 's-scan') renderHome();
+};
+// Android back button: any other screen goes back to the scan screen; on the scan screen the app closes.
+// (Not while a slip is being read.)
+self.__slipBack = () => {
+  const cur = screens.find((s) => !$(s).hidden);
+  if (cur === 's-scan' || cur === 's-read') return cur === 's-read';
+  show('s-scan');
+  return true;
 };
 // ---- screen language: phone language by default, changeable in Settings ----
 const langSel = $('uiLang');
@@ -123,7 +132,7 @@ async function explainNow() {
   if (!r || !Number.isFinite(r.net)) { $('cloudMsg').textContent = t('nothingExplain'); return; }
   $('cloudMsg').textContent = t('explainWait');
   try {
-    const fb = await import('./firebase.js');
+    const fb = await import(self.SlipNative ? './native.js' : './firebase.js');
     const w = await fb.explainWords(r.deductions.map((d) => d.label), getLang());
     const text = explainText(r, w);
     $('cloudMsg').textContent = text;
@@ -203,7 +212,10 @@ async function showHistory() {
     $('seasonPeek').textContent = L.count ? t('dedTook', { x: money(L.deducted), p: (100 * L.share).toFixed(1) + '%' }) : t('whereMoney');
   }
   $('histList').innerHTML = '';
-  for (const r of rows) {
+  for (const r of rows) $('histList').append(slipRow(r));
+}
+function slipRow(r) {
+  {
     const cur = curSel.value; curSel.value = r.currency;           // format in the slip's own currency
     const verified = r.result && !r.result.unreliable && Number.isFinite(r.result.net);
     const net = verified ? money(r.result.net) : '—';   // never show an unverified number
@@ -213,20 +225,43 @@ async function showHistory() {
     const li = document.createElement('li');
     li.innerHTML = `<button><img alt="" ${src ? `src="${src}"` : ''}><span><b>${esc(net)}</b>`
       + `<small>${new Date(r.ts).toLocaleString(getLang(), { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}${r.explainPending ? ' · ' + t('explainLater') : ''}</small></span>`
-      + `<span class="flag ${verified && !flagged ? 'ok' : ''}">${!verified ? t('stampRetake') : flagged ? '!' : '✓'}</span></button>`;
+      + `<span class="flag ${verified && !flagged ? 'ok' : flagged && verified ? 'chk' : ''}">${!verified ? t('stampRetake') : flagged ? t('flagBadge') : '✓'}</span></button>`;
     li.querySelector('button').addEventListener('click', () => {
       curSel.value = r.currency; last = r; render(r.result, r);
     });
-    $('histList').append(li);
+    return li;
   }
 }
+
+// ---- first screen: a first visit gets the introduction; after that, a status board ----
+// (take a photo · this season at a glance · the latest slips), so everything is one tap away.
+async function renderHome() {
+  const rows = await listSlips(500).catch(() => []);
+  const returning = rows.length > 0;
+  $('intro').hidden = returning;
+  $('homeHello').hidden = !returning;
+  $('home').hidden = !returning;
+  document.querySelector('#s-scan .tips').classList.toggle('compact', returning);
+  if (!returning) return;
+  const L = buildLedger(rows, curSel.value);
+  const ok = Number.isFinite(L.share);
+  $('hcRecv').textContent = ok ? money(L.received) : '—';
+  $('hcDed').textContent = ok ? (100 * L.share).toFixed(1) + '%' : '—';
+  $('hcN').textContent = String(L.count);
+  $('hcFlag').hidden = !L.flagged;
+  $('hcFlag').textContent = t('needCheck', { n: L.flagged });
+  thumbs.forEach(URL.revokeObjectURL); thumbs = [];
+  $('homeList').replaceChildren(...rows.slice(0, 3).map(slipRow));
+}
+$('homeSeason').addEventListener('click', showSeason);
+$('homeAll').addEventListener('click', async () => { await showHistory(); show('s-history'); });
 let armed = false;
 $('histClear').addEventListener('click', async () => {
   if (!armed) { armed = true; $('histClear').textContent = t('tapAgain'); setTimeout(() => { armed = false; $('histClear').textContent = t('deleteAll'); }, 4000); return; }
   armed = false; $('histClear').textContent = t('deleteAll');
   await clearSlips(); showHistory();
 });
-showHistory();
+showHistory(); renderHome();
 
 // ---- where a slip is read: on this device by default; the cloud only with the user's OK ----
 let lastBlob = null, pendingBlob = null, lastQuality = null;

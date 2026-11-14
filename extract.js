@@ -26,6 +26,7 @@ export const PROMPT =
  * A capability check only (is there an on-device model?). No inference happens here; every model call goes
  * through Firebase AI Logic (firebase.js). */
 export async function onDeviceStatus() {
+  if (self.SlipNative) return (await import('./native.js')).status().catch(() => 'unavailable'); // Android app
   if (!('LanguageModel' in self)) return 'unsupported';
   try { return await LanguageModel.availability({ expectedInputs: [{ type: 'image' }] }); }
   catch (_) { return 'unavailable'; }
@@ -36,6 +37,6 @@ export async function onDeviceStatus() {
  * (only after the user agreed). All AI goes through the Firebase AI Logic SDK; nothing calls the model directly.
  */
 export async function extractSlip(blob, opts) {
-  const fb = await import('./firebase.js');
+  const fb = await import(self.SlipNative ? './native.js' : './firebase.js');
   return fb.extractViaFirebase(blob, opts);
 }

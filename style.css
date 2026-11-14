@@ -195,3 +195,21 @@ footer{padding-bottom:12px}
 /* ---- consent before a photo leaves the device ---- */
 .consent-text{font-size:16px;line-height:1.55;margin:10px 0 6px}
 .consent-list{margin:0;padding-left:18px;font-size:14px;line-height:1.5;color:#4d473d;display:grid;gap:4px}
+
+/* ---- returning visit: the first screen is a status board ---- */
+#home{display:grid;gap:10px}
+.home-card{display:grid;gap:8px;text-align:left;background:var(--paper);border:0;border-left:4px solid var(--stamp-green);border-radius:8px;padding:12px 14px;cursor:pointer;font:inherit;color:var(--ink);box-shadow:0 1px 5px rgba(0,0,0,.08)}
+.home-card .hc-k{font:600 11px/1.3 ui-monospace,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase;color:#7a7263}
+.hc-nums{display:grid;grid-template-columns:1.5fr 1fr .8fr;gap:8px;font-variant-numeric:tabular-nums}
+.hc-nums span{display:grid;gap:0}
+.hc-nums small{font-size:12px;color:var(--muted)}
+.hc-nums b{font-size:20px;line-height:1.2;overflow-wrap:anywhere}
+.hc-nums span:first-child b{color:var(--stamp-green)}
+.hc-flag{font-size:13px;font-weight:700;color:var(--pen)}
+.home-h{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;font-weight:700;color:#5f584b;margin-top:4px}
+.home-h .link{font-size:13px}
+#homeHello{font-size:21px}
+.tips.compact li{padding:6px 2px}
+.tips.compact svg{width:26px;height:26px}
+.tips.compact span{display:none}
+.hist .flag.chk{color:#fff;background:var(--pen);border-radius:999px;padding:2px 9px}

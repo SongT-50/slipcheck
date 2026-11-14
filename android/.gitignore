@@ -1,0 +1,6 @@
+.gradle/
+build/
+app/build/
+local.properties
+# Firebase app config for this project; get your own from the Firebase console.
+app/google-services.json

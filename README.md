@@ -66,3 +66,16 @@ All slips under `samples/` and `test/photo/` are **fictional**: invented names a
 
 ## License
 Apache-2.0 — see [LICENSE](LICENSE).
+
+## Android app (`android/`)
+
+The same screens and the same arithmetic run as an Android app: the web files are copied into the app at build time,
+and only the model call changes. Reading goes through **Firebase AI Logic for Android** (`firebase-ai` +
+`firebase-ai-ondevice`): Gemini Nano on the phone through AICore with `ONLY_ON_DEVICE`, and the cloud model with
+`ONLY_IN_CLOUD` only after the user agrees. Read-aloud uses the phone's own speech engine.
+
+- On-device needs a phone on the ML Kit GenAI device list (for example Galaxy S25/S26, Z Flip7/Fold7, Pixel 9/10).
+  On other phones the app reports that no on-device model is available and asks before reading in the cloud.
+- Build: add your own `android/app/google-services.json` (Firebase console → Android app `app.slipcheck`), then
+  `cd android && ./gradlew assembleDebug`. App Check uses the debug provider in this build; register the debug token
+  that the app prints to logcat.

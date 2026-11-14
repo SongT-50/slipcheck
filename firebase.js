@@ -7,6 +7,7 @@ import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'https://www.gst
 import { getAI, getGenerativeModel, GoogleAIBackend, InferenceMode } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-ai.js';
 import { firebaseConfig, recaptchaSiteKey } from './firebase-config.js';
 import { SCHEMA, PROMPT } from './extract.js';
+import { explainPrompt } from './explain-prompt.js';
 
 const app = initializeApp(firebaseConfig);
 
@@ -112,14 +113,6 @@ const explainer = getGenerativeModel(ai, {
 
 /** Ask the cloud model for words only. Returns the parsed JSON. */
 export async function explainWords(labels, lang = 'en') {
-  const prompt =
-    `Language: BCP-47 "${lang}". A farmer is reading a produce consignment settlement slip. Write plain everyday words, speaking to the farmer as "you". ` +
-    'total_sale, you_received, share: short labels (2-5 words) in that language. ' +
-    'meanings: for each deduction label below, in the same order, a few words on what that kind of charge usually pays for. ' +
-    'Do not repeat the label, do not mention amounts or percentages, do not say whether it is fair, legal or normal. ' +
-    'mismatch: one or two sentences in that language that keep the placeholders {stated}, {expected} and {charged} exactly, meaning: ' +
-    '"The slip says {stated}, which would be {expected} of your total sale, but {charged} was taken. Ask the company that issued the slip how it was calculated." ' +
-    'Deduction labels: ' + JSON.stringify(labels);
-  const res = await explainer.generateContent(prompt);
+  const res = await explainer.generateContent(explainPrompt(labels, lang));
   return JSON.parse(res.response.text());
 }
