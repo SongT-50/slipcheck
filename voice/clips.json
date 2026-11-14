@@ -1,73 +1,501 @@
 {
-  "_note": "Recorded voice clips for read-aloud (made once with ElevenLabs, see tools/make_voice.py). The app joins them offline; no voice service is called at run time.",
-  "ko": {
-    "voice": "Chris (ElevenLabs voice library)",
-    "phrases": {
-      "p_got": "받으신 돈은",
-      "p_end": "입니다.",
-      "p_sold": "판매 금액은",
-      "p_ded": "공제된 돈은",
-      "p_pct_pre": "판매 금액의",
-      "p_pct": "퍼센트입니다.",
-      "p_bad": "항목을 확인해 보세요. 적힌 비율로 계산한 금액과 실제로 뗀 금액이 다릅니다.",
-      "p_ok": "모든 줄의 계산이 맞습니다.",
-      "p_retake": "사진을 정확히 읽지 못했습니다. 다시 찍어 주세요."
-    },
-    "numbers": {
-      "d1": "일", "d2": "이", "d3": "삼", "d4": "사", "d5": "오", "d6": "육", "d7": "칠", "d8": "팔", "d9": "구", "d0": "영",
-      "x10_1": "십", "x10_2": "이십", "x10_3": "삼십", "x10_4": "사십", "x10_5": "오십", "x10_6": "육십", "x10_7": "칠십", "x10_8": "팔십", "x10_9": "구십",
-      "x100_1": "백", "x100_2": "이백", "x100_3": "삼백", "x100_4": "사백", "x100_5": "오백", "x100_6": "육백", "x100_7": "칠백", "x100_8": "팔백", "x100_9": "구백",
-      "x1000_1": "천", "x1000_2": "이천", "x1000_3": "삼천", "x1000_4": "사천", "x1000_5": "오천", "x1000_6": "육천", "x1000_7": "칠천", "x1000_8": "팔천", "x1000_9": "구천",
-      "man": "만", "eok": "억", "point": "점"
-    },
-    "currency": { "c_KRW": "원", "c_INR": "루피", "c_MXN": "페소", "c_USD": "달러" },
-    "labels": {
-      "l_commission": ["위탁수수료", "위탁수수료"],
-      "l_fee": ["수수료", "수수료"],
-      "l_handling": ["하역비", "하역비"],
-      "l_transport": ["운송비", "운송비"],
-      "l_freight": ["운임", "운임"],
-      "l_loading": ["상차비", "상차비"],
-      "l_unloading": ["하차비", "하차비"],
-      "l_sorting": ["선별비", "선별비"],
-      "l_packing": ["포장비", "포장비"],
-      "l_prep": ["준비비", "준비비"],
-      "l_market": ["시장사용료", "시장 사용료"],
-      "l_other": [null, "기타 공제"]
-    }
+ "_note": "Recorded voice clips for read-aloud (made once with ElevenLabs, see tools/make_voice.py). The app joins them offline; no voice service is called at run time.",
+ "ko": {
+  "voice": "Chris (ElevenLabs voice library)",
+  "phrases": {
+   "p_got": "받으신 돈은",
+   "p_end": "입니다.",
+   "p_sold": "판매 금액은",
+   "p_ded": "공제된 돈은",
+   "p_pct_pre": "판매 금액의",
+   "p_pct": "퍼센트입니다.",
+   "p_bad": "항목을 확인해 보세요. 적힌 비율로 계산한 금액과 실제로 뗀 금액이 다릅니다.",
+   "p_ok": "모든 줄의 계산이 맞습니다.",
+   "p_retake": "사진을 정확히 읽지 못했습니다. 다시 찍어 주세요."
   },
-  "en": {
-    "voice": "Allison (ElevenLabs voice library)",
-    "phrases": {
-      "p_got": "You received",
-      "p_sold": "You sold",
-      "p_ded": "was deducted, that is",
-      "p_pct": "percent.",
-      "p_check": "Please check",
-      "p_bad": "The amount taken does not match the rate on the slip.",
-      "p_ok": "Every line adds up.",
-      "p_retake": "This photo could not be read clearly. Please take it again."
-    },
-    "numbers": {
-      "w0": "zero", "w1": "one", "w2": "two", "w3": "three", "w4": "four", "w5": "five", "w6": "six", "w7": "seven", "w8": "eight", "w9": "nine",
-      "w10": "ten", "w11": "eleven", "w12": "twelve", "w13": "thirteen", "w14": "fourteen", "w15": "fifteen", "w16": "sixteen", "w17": "seventeen", "w18": "eighteen", "w19": "nineteen",
-      "w20": "twenty", "w30": "thirty", "w40": "forty", "w50": "fifty", "w60": "sixty", "w70": "seventy", "w80": "eighty", "w90": "ninety",
-      "hundred": "hundred", "thousand": "thousand", "million": "million", "billion": "billion", "point": "point"
-    },
-    "currency": { "c_KRW": "won", "c_INR": "rupees", "c_MXN": "pesos", "c_USD": "dollars" },
-    "labels": {
-      "l_commission": ["commission", "Commission"],
-      "l_marketfee": ["marketfee", "Market fee"],
-      "l_hamali": ["hamal", "Hamali, the labour charge"],
-      "l_weighing": ["weigh", "Weighing"],
-      "l_transport": ["transport", "Transport"],
-      "l_freight": ["freight", "Freight"],
-      "l_loading": ["loading", "Loading"],
-      "l_unloading": ["unloading", "Unloading"],
-      "l_packing": ["packing", "Packing"],
-      "l_handling": ["handling", "Handling"],
-      "l_cess": ["cess", "Market cess"],
-      "l_other": [null, "Another deduction"]
-    }
+  "numbers": {
+   "d1": "일",
+   "d2": "이",
+   "d3": "삼",
+   "d4": "사",
+   "d5": "오",
+   "d6": "육",
+   "d7": "칠",
+   "d8": "팔",
+   "d9": "구",
+   "d0": "영",
+   "x100_1": "백",
+   "x100_2": "이백",
+   "x100_3": "삼백",
+   "x100_4": "사백",
+   "x100_5": "오백",
+   "x100_6": "육백",
+   "x100_7": "칠백",
+   "x100_8": "팔백",
+   "x100_9": "구백",
+   "x1000_1": "천",
+   "x1000_2": "이천",
+   "x1000_3": "삼천",
+   "x1000_4": "사천",
+   "x1000_5": "오천",
+   "x1000_6": "육천",
+   "x1000_7": "칠천",
+   "x1000_8": "팔천",
+   "x1000_9": "구천",
+   "man": "만",
+   "eok": "억",
+   "point": "점",
+   "k1": "일",
+   "k2": "이",
+   "k3": "삼",
+   "k4": "사",
+   "k5": "오",
+   "k6": "육",
+   "k7": "칠",
+   "k8": "팔",
+   "k9": "구",
+   "k10": "십",
+   "k11": "십일",
+   "k12": "십이",
+   "k13": "십삼",
+   "k14": "십사",
+   "k15": "십오",
+   "k16": "십육",
+   "k17": "십칠",
+   "k18": "십팔",
+   "k19": "십구",
+   "k20": "이십",
+   "k21": "이십일",
+   "k22": "이십이",
+   "k23": "이십삼",
+   "k24": "이십사",
+   "k25": "이십오",
+   "k26": "이십육",
+   "k27": "이십칠",
+   "k28": "이십팔",
+   "k29": "이십구",
+   "k30": "삼십",
+   "k31": "삼십일",
+   "k32": "삼십이",
+   "k33": "삼십삼",
+   "k34": "삼십사",
+   "k35": "삼십오",
+   "k36": "삼십육",
+   "k37": "삼십칠",
+   "k38": "삼십팔",
+   "k39": "삼십구",
+   "k40": "사십",
+   "k41": "사십일",
+   "k42": "사십이",
+   "k43": "사십삼",
+   "k44": "사십사",
+   "k45": "사십오",
+   "k46": "사십육",
+   "k47": "사십칠",
+   "k48": "사십팔",
+   "k49": "사십구",
+   "k50": "오십",
+   "k51": "오십일",
+   "k52": "오십이",
+   "k53": "오십삼",
+   "k54": "오십사",
+   "k55": "오십오",
+   "k56": "오십육",
+   "k57": "오십칠",
+   "k58": "오십팔",
+   "k59": "오십구",
+   "k60": "육십",
+   "k61": "육십일",
+   "k62": "육십이",
+   "k63": "육십삼",
+   "k64": "육십사",
+   "k65": "육십오",
+   "k66": "육십육",
+   "k67": "육십칠",
+   "k68": "육십팔",
+   "k69": "육십구",
+   "k70": "칠십",
+   "k71": "칠십일",
+   "k72": "칠십이",
+   "k73": "칠십삼",
+   "k74": "칠십사",
+   "k75": "칠십오",
+   "k76": "칠십육",
+   "k77": "칠십칠",
+   "k78": "칠십팔",
+   "k79": "칠십구",
+   "k80": "팔십",
+   "k81": "팔십일",
+   "k82": "팔십이",
+   "k83": "팔십삼",
+   "k84": "팔십사",
+   "k85": "팔십오",
+   "k86": "팔십육",
+   "k87": "팔십칠",
+   "k88": "팔십팔",
+   "k89": "팔십구",
+   "k90": "구십",
+   "k91": "구십일",
+   "k92": "구십이",
+   "k93": "구십삼",
+   "k94": "구십사",
+   "k95": "구십오",
+   "k96": "구십육",
+   "k97": "구십칠",
+   "k98": "구십팔",
+   "k99": "구십구"
+  },
+  "currency": {
+   "c_KRW": "원",
+   "c_INR": "루피",
+   "c_MXN": "페소",
+   "c_USD": "달러"
+  },
+  "labels": {
+   "l_commission": [
+    [
+     "위탁수수료",
+     "commission",
+     "comision"
+    ],
+    "위탁수수료"
+   ],
+   "l_fee": [
+    [
+     "수수료",
+     "fee"
+    ],
+    "수수료"
+   ],
+   "l_handling": [
+    [
+     "하역비",
+     "handling",
+     "hamal",
+     "maniobras",
+     "descarga"
+    ],
+    "하역비"
+   ],
+   "l_transport": [
+    [
+     "운송비",
+     "transport"
+    ],
+    "운송비"
+   ],
+   "l_freight": [
+    [
+     "운임",
+     "freight",
+     "flete"
+    ],
+    "운임"
+   ],
+   "l_loading": [
+    [
+     "상차비",
+     "loading"
+    ],
+    "상차비"
+   ],
+   "l_unloading": [
+    [
+     "하차비",
+     "unloading"
+    ],
+    "하차비"
+   ],
+   "l_sorting": [
+    [
+     "선별비",
+     "sorting"
+    ],
+    "선별비"
+   ],
+   "l_packing": [
+    [
+     "포장비",
+     "packing"
+    ],
+    "포장비"
+   ],
+   "l_prep": [
+    [
+     "준비비",
+     "preparation"
+    ],
+    "준비비"
+   ],
+   "l_market": [
+    [
+     "시장사용료",
+     "marketfee",
+     "market"
+    ],
+    "시장 사용료"
+   ],
+   "l_weighing": [
+    [
+     "계량비",
+     "weigh"
+    ],
+    "계량비"
+   ],
+   "l_cess": [
+    [
+     "시장세",
+     "cess"
+    ],
+    "시장세"
+   ],
+   "l_other": [
+    [],
+    "기타 공제"
+   ]
   }
+ },
+ "en": {
+  "voice": "Allison (ElevenLabs voice library)",
+  "phrases": {
+   "p_got": "You received",
+   "p_sold": "You sold",
+   "p_ded": "was deducted, that is",
+   "p_pct": "percent.",
+   "p_check": "Please check",
+   "p_bad": "The amount taken does not match the rate on the slip.",
+   "p_ok": "Every line adds up.",
+   "p_retake": "This photo could not be read clearly. Please take it again."
+  },
+  "numbers": {
+   "w0": "zero",
+   "w1": "one",
+   "w2": "two",
+   "w3": "three",
+   "w4": "four",
+   "w5": "five",
+   "w6": "six",
+   "w7": "seven",
+   "w8": "eight",
+   "w9": "nine",
+   "hundred": "hundred",
+   "thousand": "thousand",
+   "million": "million",
+   "billion": "billion",
+   "point": "point",
+   "e1": "one",
+   "e2": "two",
+   "e3": "three",
+   "e4": "four",
+   "e5": "five",
+   "e6": "six",
+   "e7": "seven",
+   "e8": "eight",
+   "e9": "nine",
+   "e10": "ten",
+   "e11": "eleven",
+   "e12": "twelve",
+   "e13": "thirteen",
+   "e14": "fourteen",
+   "e15": "fifteen",
+   "e16": "sixteen",
+   "e17": "seventeen",
+   "e18": "eighteen",
+   "e19": "nineteen",
+   "e20": "twenty",
+   "e21": "twenty-one",
+   "e22": "twenty-two",
+   "e23": "twenty-three",
+   "e24": "twenty-four",
+   "e25": "twenty-five",
+   "e26": "twenty-six",
+   "e27": "twenty-seven",
+   "e28": "twenty-eight",
+   "e29": "twenty-nine",
+   "e30": "thirty",
+   "e31": "thirty-one",
+   "e32": "thirty-two",
+   "e33": "thirty-three",
+   "e34": "thirty-four",
+   "e35": "thirty-five",
+   "e36": "thirty-six",
+   "e37": "thirty-seven",
+   "e38": "thirty-eight",
+   "e39": "thirty-nine",
+   "e40": "forty",
+   "e41": "forty-one",
+   "e42": "forty-two",
+   "e43": "forty-three",
+   "e44": "forty-four",
+   "e45": "forty-five",
+   "e46": "forty-six",
+   "e47": "forty-seven",
+   "e48": "forty-eight",
+   "e49": "forty-nine",
+   "e50": "fifty",
+   "e51": "fifty-one",
+   "e52": "fifty-two",
+   "e53": "fifty-three",
+   "e54": "fifty-four",
+   "e55": "fifty-five",
+   "e56": "fifty-six",
+   "e57": "fifty-seven",
+   "e58": "fifty-eight",
+   "e59": "fifty-nine",
+   "e60": "sixty",
+   "e61": "sixty-one",
+   "e62": "sixty-two",
+   "e63": "sixty-three",
+   "e64": "sixty-four",
+   "e65": "sixty-five",
+   "e66": "sixty-six",
+   "e67": "sixty-seven",
+   "e68": "sixty-eight",
+   "e69": "sixty-nine",
+   "e70": "seventy",
+   "e71": "seventy-one",
+   "e72": "seventy-two",
+   "e73": "seventy-three",
+   "e74": "seventy-four",
+   "e75": "seventy-five",
+   "e76": "seventy-six",
+   "e77": "seventy-seven",
+   "e78": "seventy-eight",
+   "e79": "seventy-nine",
+   "e80": "eighty",
+   "e81": "eighty-one",
+   "e82": "eighty-two",
+   "e83": "eighty-three",
+   "e84": "eighty-four",
+   "e85": "eighty-five",
+   "e86": "eighty-six",
+   "e87": "eighty-seven",
+   "e88": "eighty-eight",
+   "e89": "eighty-nine",
+   "e90": "ninety",
+   "e91": "ninety-one",
+   "e92": "ninety-two",
+   "e93": "ninety-three",
+   "e94": "ninety-four",
+   "e95": "ninety-five",
+   "e96": "ninety-six",
+   "e97": "ninety-seven",
+   "e98": "ninety-eight",
+   "e99": "ninety-nine"
+  },
+  "currency": {
+   "c_KRW": "won",
+   "c_INR": "rupees",
+   "c_MXN": "pesos",
+   "c_USD": "dollars"
+  },
+  "labels": {
+   "l_commission": [
+    [
+     "commission",
+     "comision",
+     "위탁수수료"
+    ],
+    "Commission"
+   ],
+   "l_fee": [
+    [
+     "fee",
+     "수수료"
+    ],
+    "Fee"
+   ],
+   "l_marketfee": [
+    [
+     "marketfee",
+     "market",
+     "시장사용료"
+    ],
+    "Market fee"
+   ],
+   "l_hamali": [
+    [
+     "hamal"
+    ],
+    "Hamali, the labour charge"
+   ],
+   "l_weighing": [
+    [
+     "weigh",
+     "계량"
+    ],
+    "Weighing"
+   ],
+   "l_transport": [
+    [
+     "transport",
+     "운송"
+    ],
+    "Transport"
+   ],
+   "l_freight": [
+    [
+     "freight",
+     "flete",
+     "운임"
+    ],
+    "Freight"
+   ],
+   "l_loading": [
+    [
+     "loading",
+     "상차"
+    ],
+    "Loading"
+   ],
+   "l_unloading": [
+    [
+     "unloading",
+     "하차"
+    ],
+    "Unloading"
+   ],
+   "l_packing": [
+    [
+     "packing",
+     "포장"
+    ],
+    "Packing"
+   ],
+   "l_handling": [
+    [
+     "handling",
+     "하역",
+     "maniobras",
+     "descarga"
+    ],
+    "Handling"
+   ],
+   "l_cess": [
+    [
+     "cess",
+     "시장세"
+    ],
+    "Market cess"
+   ],
+   "l_sorting": [
+    [
+     "sorting",
+     "선별"
+    ],
+    "Sorting"
+   ],
+   "l_prep": [
+    [
+     "preparation",
+     "준비"
+    ],
+    "Preparation"
+   ],
+   "l_other": [
+    [],
+    "Another deduction"
+   ]
+  }
+ }
 }

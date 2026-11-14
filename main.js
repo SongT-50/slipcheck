@@ -78,7 +78,7 @@ onDeviceStatus().then((s) => {
 });
 
 // ---- input ----
-$('photo').addEventListener('change', (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) check(f); });
+for (const id of ['photo', 'photoPick']) $(id).addEventListener('change', (e) => { const f = e.target.files[0]; e.target.value = ''; if (f) check(f); });
 
 // ---- check the photo: orientation, one tap ----
 let chk = null; // { bmp, turns, url }
@@ -257,6 +257,14 @@ async function renderHome() {
   $('hcFlag').textContent = t('needCheck', { n: L.flagged });
   thumbs.forEach(URL.revokeObjectURL); thumbs = [];
   $('homeList').replaceChildren(...rows.slice(0, 3).map(slipRow));
+  // one card for the slip that needs a look (the newest one), one tap to open it
+  const need = rows.find((r) => r.result && !r.result.unreliable && Number.isFinite(r.result.net)
+    && (r.result.deductions?.some((d) => d.rateOk === false) || r.result.warnings?.length));
+  $('homeAlert').hidden = !need;
+  if (need) {
+    $('homeAlertText').textContent = t('alertOne', { when: new Date(need.ts).toLocaleDateString(getLang(), { month: 'short', day: 'numeric' }) });
+    $('homeAlert').onclick = () => { curSel.value = need.currency; last = need; render(need.result, need); };
+  }
 }
 $('homeSeason').addEventListener('click', showSeason);
 $('homeAll').addEventListener('click', async () => { await showHistory(); show('s-history'); });

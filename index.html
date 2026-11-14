@@ -34,6 +34,9 @@
     </div>
     <h1 id="homeHello" hidden data-i18n="homeHello">Got a new slip?</h1>
     <label class="btn primary" for="photo" data-i18n="takePhoto">Take photo</label>
+    <label class="btn pick" for="photoPick" data-i18n="pickPhoto">Choose a saved photo or file</label>
+    <input id="photoPick" type="file" accept="image/*" hidden>
+    <button id="homeAlert" class="home-alert" type="button" hidden><span id="homeAlertText"></span><b data-i18n="alertGo">Open</b></button>
     <ul class="tips" aria-label="How to take a good photo">
       <li><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 30 24 22l16 8-16 8z"/><path d="M14 27V12h20v15"/></svg><b data-i18n="tipFlat">Flat</b><span data-i18n="tipFlatSub">on a table, no folds</span></li>
       <li><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="20" r="7"/><path d="M24 5v4M24 31v4M9 20h4M35 20h4M13.4 9.4l2.8 2.8M31.8 27.8l2.8 2.8M13.4 30.6l2.8-2.8M31.8 12.2l2.8-2.8"/><path d="M12 42h24"/></svg><b data-i18n="tipBright">Bright</b><span data-i18n="tipBrightSub">daylight, no shadow</span></li>

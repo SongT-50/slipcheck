@@ -17,8 +17,7 @@ function koGroup(g) {           // 1..9999
   const out = [], th = Math.floor(g / 1000), h = Math.floor((g % 1000) / 100), t = Math.floor((g % 100) / 10), u = g % 10;
   if (th) out.push('x1000_' + th);
   if (h) out.push('x100_' + h);
-  if (t) out.push('x10_' + t);
-  if (u) out.push('d' + u);
+  if (g % 100) out.push('k' + (g % 100));   // 1-99 recorded as whole words ("이십사")
   return out;
 }
 function koInt(n) {
@@ -32,8 +31,7 @@ function koInt(n) {
 function enUnder1000(x) {
   const out = [], h = Math.floor(x / 100), r = x % 100;
   if (h) out.push('w' + h, 'hundred');
-  if (r && r < 20) out.push('w' + r);
-  else if (r) { out.push('w' + Math.floor(r / 10) * 10); if (r % 10) out.push('w' + (r % 10)); }
+  if (r) out.push('e' + r);                  // 1-99 recorded as whole words ("forty-six")
   return out;
 }
 function enInt(n) {
@@ -60,11 +58,14 @@ export function numberClips(n, lang, decimals = 0) {
 }
 
 function norm(s) { return String(s || '').toLowerCase().replace(/[^a-z가-힣]/g, ''); }
-/** The recorded name for a deduction label: the longest known name it contains, otherwise "another deduction". */
+/** The recorded name for a deduction label, in the screen language, whatever language the slip is in:
+ * the longest known name it contains, otherwise "another deduction". */
 export function labelClip(label, T) {
   const n = norm(label);
   let best = 'l_other', len = 0;
-  for (const [id, [key]] of Object.entries(T.labels)) if (key && n.includes(key) && key.length > len) { best = id; len = key.length; }
+  for (const [id, [keys]] of Object.entries(T.labels)) {
+    for (const key of keys) if (n.includes(key) && key.length > len) { best = id; len = key.length; }
+  }
   return best;
 }
 
@@ -119,9 +120,9 @@ export async function speakClips(r, cur, lang) {
     if (ctx !== my) return true;                        // stopped while loading
     let at = my.currentTime + 0.05;
     for (const b of bufs) {
-      if (!b) { at += 0.28; continue; }                   // between sentences
+      if (!b) { at += 0.32; continue; }                   // between sentences
       const s = my.createBufferSource(); s.buffer = b; s.connect(my.destination); s.start(at);
-      at += b.duration + 0.04;                            // a breath between words
+      at += b.duration - 0.01;                            // words run on, as in speech
     }
   } catch (e) {
     console.warn('voice clips failed', e);
