@@ -22,7 +22,9 @@ export const PROMPT =
   'issuer: the name of the agent or market company printed at the top, if any. ' +
   'If a value is not clearly legible, return an empty string for it. Never guess or invent a number. Return JSON only.';
 
-/** 'available' | 'downloadable' | 'downloading' | 'unavailable' | 'unsupported' */
+/** 'available' | 'downloadable' | 'downloading' | 'unavailable' | 'unsupported'
+ * A capability check only (is there an on-device model?). No inference happens here; every model call goes
+ * through Firebase AI Logic (firebase.js). */
 export async function onDeviceStatus() {
   if (!('LanguageModel' in self)) return 'unsupported';
   try { return await LanguageModel.availability({ expectedInputs: [{ type: 'image' }] }); }

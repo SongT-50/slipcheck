@@ -54,7 +54,7 @@ const money = (n) => `${symbol()}${symbol().length > 1 ? ' ' : ''}${n.toLocaleSt
 // ---- connection + on-device status ----
 function netPill() {
   const on = navigator.onLine;
-  $('net').textContent = on ? 'ONLINE' : 'OFFLINE · ON-DEVICE';
+  $('net').textContent = on ? t('online') : t('offlinePill');
   $('net').classList.toggle('off', !on);
 }
 addEventListener('online', () => {
@@ -64,9 +64,7 @@ addEventListener('online', () => {
 });
 addEventListener('offline', netPill); netPill();
 onDeviceStatus().then((s) => {
-  $('device').textContent = s === 'available' ? 'On-device AI is ready on this device.'
-    : s === 'unsupported' ? 'This browser has no on-device AI. Use Chrome on desktop or Android.'
-    : `On-device AI status: ${s}.`;
+  $('device').textContent = s === 'available' ? t('devReady') : s === 'unsupported' ? t('devNone') : t('devStatus', { s });
 });
 
 // ---- input ----
@@ -122,7 +120,7 @@ $('explain').addEventListener('click', () => {
 
 async function explainNow() {
   const r = last?.result;
-  if (!r || !Number.isFinite(r.net)) { $('cloudMsg').textContent = 'Nothing to explain yet.'; return; }
+  if (!r || !Number.isFinite(r.net)) { $('cloudMsg').textContent = t('nothingExplain'); return; }
   $('cloudMsg').textContent = t('explainWait');
   try {
     const fb = await import('./firebase.js');
@@ -132,7 +130,7 @@ async function explainNow() {
     if (last.id) updateSlip(last.id, { explainPending: false, explanation: text });
   } catch (e) {
     console.warn('explain failed', e);
-    $('cloudMsg').textContent = 'Could not reach the cloud model. Your result is still saved on this device.';
+    $('cloudMsg').textContent = t('cloudFail');
   }
 }
 
@@ -148,7 +146,7 @@ export function explainText(r, w) {
         .replace('{charged}', money(d.amount)));
     }
   });
-  lines.push('', `${w.you_received}: ${money(r.net)}`, `${w.share}: ${Math.round((100 * r.net) / r.gross)}%`);
+  lines.push('', `${w.you_received}: ${money(r.net)}`, `${w.share}: ${((100 * r.net) / r.gross).toFixed(1)}%`);
   return lines.join(String.fromCharCode(10));
 }
 window.SLIPCHECK_EXPLAIN = { explainText }; // for testing
@@ -170,23 +168,22 @@ function issuerOf(raw) {
 // ---- season ledger: every reconciled slip on this device, added up by code ----
 async function showSeason() {
   const L = buildLedger(await listSlips(500), curSel.value);
-  $('seasonSub').textContent = `${L.count} slip${L.count === 1 ? '' : 's'} on this device`
-    + (L.skipped ? ` · ${L.skipped} not counted (photo could not be verified)` : '');
+  $('seasonSub').textContent = t('slipsOnDevice', { n: L.count }) + (L.skipped ? ' · ' + t('notCounted', { n: L.skipped }) : '');
   $('seasonDed').textContent = Number.isFinite(L.share) ? money(L.deducted) : '—';
   $('seasonDedSub').innerHTML = Number.isFinite(L.share)
-    ? `deducted from ${money(L.gross)} sold · <b>${(100 * L.share).toFixed(1)}%</b> · you received ${money(L.received)}`
-      + (L.perKg ? ` · ${money(L.perKg)} / kg` : '') : 'No verified slips in this currency yet.';
+    ? t('dedFrom', { gross: money(L.gross), p: (100 * L.share).toFixed(1) + '%', net: money(L.received) })
+      + (L.perKg ? ` · ${money(L.perKg)} / kg` : '') : t('noVerified');
   const max = Math.max(...L.byLabel.map((x) => x.amount), 1);
   $('seasonLabels').innerHTML = L.byLabel.map((x, i) => `<li><span>${esc(x.label)}</span>`
     + `<i style="width:${(100 * x.amount) / max}%;background:${COLORS[i % COLORS.length]}"></i><b>${money(x.amount)}</b></li>`).join('');
   $('seasonAgentsWrap').hidden = L.byIssuer.length < 2;
   const maxS = Math.max(...L.byIssuer.map((x) => x.share), 0.0001);
-  $('seasonAgents').innerHTML = L.byIssuer.map((x) => `<li><span>${esc(x.issuer)} <small>${x.count} slip${x.count === 1 ? '' : 's'}</small></span>`
+  $('seasonAgents').innerHTML = L.byIssuer.map((x) => `<li><span>${esc(x.issuer)} <small>${t('slipsN', { n: x.count })}</small></span>`
     + `<i style="width:${(100 * x.share) / maxS}%"></i><b>${(100 * x.share).toFixed(1)}%</b></li>`).join('');
   $('seasonFlag').hidden = !L.flagged;
-  $('seasonFlag').textContent = `${L.flagged} slip${L.flagged === 1 ? '' : 's'} had a line that did not match its stated percentage.`;
+  $('seasonFlag').textContent = t('flaggedN', { n: L.flagged });
   const maxShare = Math.max(...L.slips.map((x) => x.share), 0.0001);
-  $('seasonSlips').innerHTML = L.slips.slice().reverse().map((x) => `<li class="${x.flagged ? 'flag' : ''}"><span>${new Date(x.ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>`
+  $('seasonSlips').innerHTML = L.slips.slice().reverse().map((x) => `<li class="${x.flagged ? 'flag' : ''}"><span>${new Date(x.ts).toLocaleDateString(getLang(), { month: 'short', day: 'numeric' })}</span>`
     + `<span class="who">${esc(x.issuer || '—')}</span><i style="width:${(100 * x.share) / maxShare}%"></i><b>${(100 * x.share).toFixed(1)}%</b></li>`).join('');
   show('s-season');
 }
@@ -215,7 +212,7 @@ async function showHistory() {
     const src = r.thumb ? (thumbs[thumbs.push(URL.createObjectURL(r.thumb)) - 1]) : '';
     const li = document.createElement('li');
     li.innerHTML = `<button><img alt="" ${src ? `src="${src}"` : ''}><span><b>${esc(net)}</b>`
-      + `<small>${new Date(r.ts).toLocaleString()}${r.explainPending ? ' · explain when online' : ''}</small></span>`
+      + `<small>${new Date(r.ts).toLocaleString(getLang())}${r.explainPending ? ' · ' + t('explainLater') : ''}</small></span>`
       + `<span class="flag ${verified && !flagged ? 'ok' : ''}">${!verified ? t('stampRetake') : flagged ? '!' : '✓'}</span></button>`;
     li.querySelector('button').addEventListener('click', () => {
       curSel.value = r.currency; last = r; render(r.result, r);
@@ -271,9 +268,9 @@ async function run(blob, where = 'device') {
   // one pencil tick per amount the model has copied so far (streamed)
   let shown = 0;
   const onChunk = (text) => {
-    const n = (text.match(/"amount"\s*:\s*"[^"]*\d[^"]*"/g) || []).length;
-    for (; shown < n; shown++) {
-      const li = document.createElement('li'); li.textContent = `line ${shown + 1}`; $('ticks').append(li);
+    const amts = [...text.matchAll(/"amount"\s*:\s*"([^"]*\d[^"]*)"/g)].map((m) => m[1]);
+    for (; shown < amts.length; shown++) {
+      const li = document.createElement('li'); li.textContent = amts[shown]; $('ticks').append(li);
     }
   };
   const read = async () => { shown = 0; $('ticks').innerHTML = ''; try { return await extractSlip(blob, { onChunk, where }); } catch (e) { return { raw: '', stopped: String(e) }; } };

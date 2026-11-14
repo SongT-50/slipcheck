@@ -1,6 +1,7 @@
-// SlipCheck — Adapter B: Firebase AI Logic, hybrid (PREFER_ON_DEVICE) + App Check.
-// On a device with Gemini Nano the slip is read on-device (nothing is uploaded).
-// Without it, the same call falls back to Gemini in the cloud, guarded by App Check.
+// SlipCheck — all AI through Firebase AI Logic, guarded by App Check.
+// Reading: ONLY_ON_DEVICE (Gemini Nano; the photo stays on the device). The cloud reader (ONLY_IN_CLOUD) runs
+// only after the user agrees: when this device has no on-device model, or its reading could not be verified.
+// Explaining: ONLY_IN_CLOUD with line names only — never the photo or the amounts.
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js';
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-app-check.js';
 import { getAI, getGenerativeModel, GoogleAIBackend, InferenceMode } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-ai.js';
@@ -40,7 +41,7 @@ const cloudParams = {
 };
 const ai = getAI(app, { backend: new GoogleAIBackend() });
 const READERS = {
-  device: getGenerativeModel(ai, { mode: InferenceMode.ONLY_ON_DEVICE, onDeviceParams, inCloudParams: cloudParams }),
+  device: getGenerativeModel(ai, { mode: InferenceMode.ONLY_ON_DEVICE, onDeviceParams }),
   cloud: getGenerativeModel(ai, { mode: InferenceMode.ONLY_IN_CLOUD, inCloudParams: cloudParams }),
 };
 
