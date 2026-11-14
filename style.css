@@ -55,3 +55,116 @@ footer{max-width:480px;margin:0 auto;padding:8px 16px 32px;font-size:12px;color:
 .bars li b{font-variant-numeric:tabular-nums}
 .bars small{color:var(--muted)}
 .agents li i{background:var(--blue)}
+
+/* ---- Result screen: the slip itself, marked up with an auditor's red pen (IN-T3 시안 A + B, 11/14) ---- */
+:root{--paper:#fbf8f0;--ink:#1f2328;--pen:#c8372d;--stamp-green:#2f6b4f;--rule:#c9c1b0}
+.slip-screen{background:transparent;border:0;padding:0}
+.paper{position:relative;background:var(--paper);color:var(--ink);padding:26px 18px 22px;box-shadow:0 2px 10px rgba(40,30,10,.12);margin:8px 0 6px}
+.paper::before,.paper::after{content:"";position:absolute;left:0;right:0;height:9px;background:
+  linear-gradient(135deg,var(--paper) 50%,transparent 50%) 0 0/14px 9px repeat-x,
+  linear-gradient(225deg,var(--paper) 50%,transparent 50%) 0 0/14px 9px repeat-x}
+.paper::before{top:-9px;transform:scaleY(-1)}
+.paper::after{bottom:-9px}
+.paper-head{display:flex;flex-direction:column;gap:2px;padding-right:90px;font:600 11px/1.4 ui-monospace,Consolas,monospace;letter-spacing:.12em;color:#7a7263;border-bottom:1px dashed var(--rule);padding-bottom:10px;margin-bottom:6px}
+.paper-head #where{letter-spacing:.02em;font-weight:400}
+.lines{list-style:none;margin:0;padding:0;font-variant-numeric:tabular-nums}
+.line{display:flex;align-items:baseline;gap:6px;padding:9px 0;font-size:16px}
+.line .lbl{min-width:0;overflow-wrap:anywhere}
+.line .lbl small{color:#8a8273;font-size:12px;margin-left:4px}
+.line .dots{flex:1;border-bottom:2px dotted var(--rule);transform:translateY(-4px);min-width:16px}
+.line .amt{position:relative;white-space:nowrap;font-weight:600}
+.line.sold .amt{font-weight:700}
+.line.bad .amt{color:var(--pen)}
+.pen{position:absolute;inset:-12px -14px;width:calc(100% + 28px);height:calc(100% + 24px);overflow:visible;pointer-events:none}
+.pen path{fill:none;stroke:var(--pen);stroke-width:2.6;stroke-linecap:round;stroke-dasharray:340;stroke-dashoffset:340;animation:draw .6s .2s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.note{list-style:none;text-align:right;color:var(--pen);font:700 22px/1.1 "Segoe Print","Bradley Hand","Comic Neue",cursive;transform:rotate(-3deg);padding:2px 4px 8px}
+.note small{display:block;font:500 12px/1.4 system-ui,sans-serif;color:var(--pen);transform:none}
+.total-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;border-top:2px solid var(--ink);margin-top:10px;padding-top:12px}
+.total-row span{font-size:14px;color:#5f584b;text-transform:uppercase;letter-spacing:.08em}
+.total-row b{font-size:34px;line-height:1.05;color:var(--stamp-green);font-variant-numeric:tabular-nums}
+.paper-sub{margin:4px 0 0;text-align:right;color:#6d665a;font-size:13px}
+.stamp{position:absolute;top:-16px;right:10px;border:3px solid currentColor;border-radius:50%;width:84px;height:84px;background:color-mix(in srgb,var(--paper) 70%,transparent);display:grid;place-items:center;text-align:center;
+  font:800 13px/1.15 ui-monospace,Consolas,monospace;letter-spacing:.06em;text-transform:uppercase;transform:rotate(-14deg);opacity:.82;padding:10px;animation:stampin .35s .5s both}
+.stamp.green{color:var(--stamp-green)} .stamp.red{color:var(--pen)} .stamp.amber{color:var(--amber)} .stamp.grey{color:#8a8273}
+@keyframes stampin{from{transform:rotate(-14deg) scale(1.6);opacity:0}to{transform:rotate(-14deg) scale(1);opacity:.82}}
+.slip-screen .alert{background:#fff4f2;border-left-color:var(--pen)}
+.btn.speak{font-size:19px;padding:16px}
+@media (prefers-reduced-motion: reduce){.pen path{animation:none;stroke-dashoffset:0}.stamp{animation:none}}
+/* retake: no total, a plain instruction instead */
+.paper.retake .total-row{display:none}
+.paper.retake .paper-sub{text-align:left;font-size:17px;line-height:1.5;color:var(--ink);margin-top:14px}
+.row:has(#explain[hidden]){grid-template-columns:1fr}
+
+/* ---- 00 first screen: one small marked-up slip says what the app does ---- */
+.hero-slip{display:flex;justify-content:center;padding:14px 0 4px}
+.paper.mini{width:min(280px,86%);padding:16px 14px 14px;transform:rotate(-2.5deg);font-size:13px;font-variant-numeric:tabular-nums;margin:0}
+.paper.mini .ml{display:flex;align-items:baseline;gap:5px;padding:4px 0}
+.paper.mini .ml i{flex:1;border-bottom:2px dotted var(--rule);transform:translateY(-3px)}
+.paper.mini .ml span:last-child{font-weight:600}
+.paper.mini .bad span:last-child{color:var(--pen);position:relative}
+.paper.mini .circ::after{content:"";position:absolute;inset:-5px -8px;border:2px solid var(--pen);border-radius:50%;transform:rotate(-4deg)}
+.paper.mini .mt{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid var(--ink);margin-top:6px;padding-top:6px}
+.paper.mini .mt span{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#5f584b}
+.paper.mini .mt b{font-size:18px;color:var(--stamp-green)}
+.mini-stamp{width:58px;height:58px;font-size:9px;top:-12px;right:-6px;border-width:2px;padding:6px;animation:none;opacity:.85}
+details.cur summary{cursor:pointer;color:var(--muted);font-size:13px}
+details.cur .field{margin-top:8px}
+.season-card{display:grid;gap:2px;text-align:left;background:var(--paper);border:0;border-left:4px solid var(--pen);border-radius:6px;padding:12px 14px;cursor:pointer;font:inherit;color:var(--ink);box-shadow:0 1px 5px rgba(40,30,10,.1)}
+.season-card .sc-k{font:600 11px/1.3 ui-monospace,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase;color:#7a7263}
+.season-card b{font-size:17px}
+.season-card .sc-go{font-size:13px;color:var(--pen)}
+.hist button{background:var(--paper)}
+
+/* ---- 02 photo check: a framed photo with corner guides ---- */
+.photo-frame{position:relative;padding:10px;background:#1f2328;border-radius:10px}
+.photo-frame::before,.photo-frame::after{content:"";position:absolute;width:26px;height:26px;border:3px solid #fff;opacity:.8}
+.photo-frame::before{top:6px;left:6px;border-right:0;border-bottom:0}
+.photo-frame::after{bottom:6px;right:6px;border-left:0;border-top:0}
+.photo-frame .check{margin:0 auto;box-shadow:none;border-radius:4px}
+
+/* ---- 03 reading: a scanner line passes over the photo, a pencil tick per line read ---- */
+.scan-wrap{display:grid;grid-template-columns:minmax(0,1fr) 92px;gap:10px;align-items:start}
+.scan{position:relative;overflow:hidden;border-radius:8px;background:#1f2328}
+.scan #preview{display:block;width:100%;border:0;border-radius:0;opacity:.92}
+.scanline{position:absolute;left:0;right:0;top:0;height:3px;background:var(--stamp-green);box-shadow:0 0 14px 4px rgba(47,107,79,.55);animation:scan 2.4s ease-in-out infinite}
+@keyframes scan{0%{top:0}50%{top:calc(100% - 3px)}100%{top:0}}
+.ticks{list-style:none;margin:0;padding:0;display:grid;gap:6px;font:500 13px/1.2 "Segoe Print","Bradley Hand",cursive;color:#5f584b}
+.ticks li::before{content:"✓ ";color:var(--stamp-green);font-weight:700}
+.ticks li{animation:tick .3s ease-out both}
+@keyframes tick{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
+.offline-big{margin:0;font-weight:700;color:var(--stamp-green);font-size:17px}
+
+/* ---- 05 checks: said like a receipt ---- */
+.slip-screen details{background:var(--paper);border-radius:6px;padding:10px 12px}
+.checks{list-style:none;padding:0;margin:8px 0 0;font:13px/1.45 ui-monospace,Consolas,monospace;color:var(--ink);display:grid;gap:4px;font-variant-numeric:tabular-nums}
+.checks li{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed var(--rule);padding:4px 0}
+.checks li span{min-width:0;overflow-wrap:anywhere}
+.checks li b{color:var(--stamp-green)}
+.checks li.no b,.checks li.no span{color:var(--pen)}
+
+/* ---- 09 season ledger: ruled ledger paper ---- */
+.paper.ledger{background:var(--paper) repeating-linear-gradient(to bottom,transparent 0 31px,#e3dccd 31px 32px);background-color:var(--paper)}
+.ledger-k{margin:8px 0 0;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:#5f584b}
+.ledger-big{font-size:38px;font-weight:800;color:var(--pen);line-height:1.1;font-variant-numeric:tabular-nums}
+.paper-sub.left{text-align:left}
+.ledger-h{font-size:14px;margin:16px 0 6px;color:#5f584b;text-transform:uppercase;letter-spacing:.06em}
+.paper.ledger .bars li i{background:var(--pen);opacity:.8}
+.paper.ledger .agents li i{background:var(--ink);opacity:.7}
+.paper.ledger .bars li{grid-template-columns:minmax(0,1.3fr) 1fr auto}
+.paper.ledger .bars li span{white-space:normal}
+.slipline{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:14px;font-variant-numeric:tabular-nums}
+.slipline li{display:grid;grid-template-columns:52px minmax(0,1fr) 70px 54px;gap:8px;align-items:center}
+.slipline .who{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#5f584b}
+.slipline i{display:block;height:8px;border-radius:4px;background:var(--ink);opacity:.6}
+.slipline li.flag i{background:var(--pen);opacity:.85}
+.slipline li.flag b{color:var(--pen)}
+.slipline b{text-align:right}
+
+/* ---- 07 cloud note ---- */
+.note-paper #cloudMsg{white-space:pre-line;font-size:15px;line-height:1.6;margin:8px 0 0}
+@media (prefers-reduced-motion: reduce){.scanline,.ticks li{animation:none}.scanline{display:none}}
+.paper.mini{padding-top:46px}
+.mini-stamp{top:-14px;right:-8px}
+.paper.ledger{background:var(--paper)}
+.paper.ledger .ledger-h{border-top:1px dashed var(--rule);padding-top:12px}

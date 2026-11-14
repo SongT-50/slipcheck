@@ -17,7 +17,9 @@ let last = null;
 // ---- currency (user setting, never guessed by the model) ----
 const curSel = $('currency');
 try { const c = localStorage.getItem('slipcheck.currency'); if (c) curSel.value = c; } catch (_) {}
-curSel.addEventListener('change', () => { try { localStorage.setItem('slipcheck.currency', curSel.value); } catch (_) {} });
+const curLabel = () => { $('curSum').textContent = 'Currency: ' + curSel.selectedOptions[0].textContent; };
+curSel.addEventListener('change', () => { curLabel(); try { localStorage.setItem('slipcheck.currency', curSel.value); } catch (_) {} });
+curLabel();
 const symbol = () => curSel.value.split('|')[1];
 const decimals = () => (curSel.value.startsWith('KRW') ? 0 : 2);
 const money = (n) => `${symbol()}${symbol().length > 1 ? ' ' : ''}${n.toLocaleString('en-US', { minimumFractionDigits: decimals(), maximumFractionDigits: decimals() })}`;
@@ -137,6 +139,9 @@ async function showSeason() {
     + `<i style="width:${(100 * x.share) / maxS}%"></i><b>${(100 * x.share).toFixed(1)}%</b></li>`).join('');
   $('seasonFlag').hidden = !L.flagged;
   $('seasonFlag').textContent = `${L.flagged} slip${L.flagged === 1 ? '' : 's'} had a line that did not match its stated percentage.`;
+  const maxShare = Math.max(...L.slips.map((x) => x.share), 0.0001);
+  $('seasonSlips').innerHTML = L.slips.slice().reverse().map((x) => `<li class="${x.flagged ? 'flag' : ''}"><span>${new Date(x.ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>`
+    + `<span class="who">${esc(x.issuer || '—')}</span><i style="width:${(100 * x.share) / maxShare}%"></i><b>${(100 * x.share).toFixed(1)}%</b></li>`).join('');
   show('s-season');
 }
 $('seasonBtn').addEventListener('click', showSeason);
@@ -150,6 +155,10 @@ async function showHistory() {
   thumbs.forEach(URL.revokeObjectURL); thumbs = [];
   $('history').hidden = !rows.length;
   $('seasonBtn').hidden = rows.length < 2;
+  if (rows.length >= 2) {
+    const L = buildLedger(await listSlips(500), curSel.value);
+    $('seasonPeek').textContent = L.count ? `Deductions took ${money(L.deducted)} (${(100 * L.share).toFixed(1)}%)` : 'Where did my money go?';
+  }
   $('histList').innerHTML = '';
   for (const r of rows) {
     const cur = curSel.value; curSel.value = r.currency;           // format in the slip's own currency
@@ -179,6 +188,7 @@ showHistory();
 async function run(blob) {
   $('preview').src = URL.createObjectURL(blob);
   $('readMsg').textContent = 'Reading on your device…';
+  $('ticks').innerHTML = '';
   show('s-read');
   const t0 = performance.now();
   const tick = setInterval(() => {
@@ -186,7 +196,15 @@ async function run(blob) {
     $('secs').textContent = s.toFixed(0);
     $('bar').style.width = Math.min(95, (s / 55) * 100) + '%';
   }, 500);
-  const read = async () => { try { return await extractSlip(blob); } catch (e) { return { raw: '', stopped: String(e) }; } };
+  // one pencil tick per amount the model has copied so far (streamed)
+  let shown = 0;
+  const onChunk = (text) => {
+    const n = (text.match(/"amount"\s*:\s*"[^"]*\d[^"]*"/g) || []).length;
+    for (; shown < n; shown++) {
+      const li = document.createElement('li'); li.textContent = `line ${shown + 1}`; $('ticks').append(li);
+    }
+  };
+  const read = async () => { shown = 0; $('ticks').innerHTML = ''; try { return await extractSlip(blob, { onChunk }); } catch (e) { return { raw: '', stopped: String(e) }; } };
   let out = await read(), result = reconcile(out.raw);
   // Second read: the on-device model is not deterministic, so a scrambled or cut-off read often comes out
   // right the next time. Keep whichever read reconciles.
@@ -207,38 +225,76 @@ async function run(blob) {
 }
 
 const WHERE = { on_device: 'Read on this device', in_cloud: 'Read in the cloud (no on-device model here)' };
+// Red-pen circle drawn around a wrong amount (one SVG path, drawn in 0.6 s unless reduced motion).
+const CIRCLE = '<svg class="pen" viewBox="0 0 120 48" preserveAspectRatio="none" aria-hidden="true"><path d="M14 30 C8 12 52 4 84 6 C110 8 118 22 110 34 C100 46 40 47 18 38 C6 33 9 17 30 11"/></svg>';
+function stamp(kind, text) {
+  $('stamp').className = 'stamp ' + kind;
+  $('stamp').textContent = text;
+  $('stamp').hidden = false;
+}
 function render(r, meta = {}) {
   $('where').textContent = [WHERE[meta.source], meta.sec ? `${meta.sec.toFixed(0)} s` : ''].filter(Boolean).join(' · ');
   if (!Number.isFinite(r.net) || !r.items.length || r.unreliable) {
+    $('lines').innerHTML = '';
     $('netAmt').textContent = '—';
     $('netSub').textContent = 'Could not read this slip clearly, so SlipCheck shows no number. Lay it flat in good light and take the photo again.';
-    $('stack').innerHTML = $('legend').innerHTML = $('alerts').innerHTML = $('checks').innerHTML = '';
+    $('alerts').innerHTML = $('checks').innerHTML = '';
     $('checksSum').parentElement.hidden = true;   // no stale "5/6 checks" from the previous slip
     $('explain').hidden = true;                   // nothing verified to explain
+    $('paper').classList.add('retake');
+    stamp('grey', 'Retake');
     show('s-result'); return;
   }
+  $('paper').classList.remove('retake');
   $('checksSum').parentElement.hidden = false;
   $('explain').hidden = false;
+  const pct = (v) => ((100 * v) / r.gross).toFixed(1) + '%';
+  const rows = [`<li class="line sold"><span class="lbl">Sold</span><i class="dots"></i><span class="amt">${money(r.gross)}</span></li>`];
+  for (const d of r.deductions) {
+    if (d.rateOk === false) {
+      const exp = (r.gross * d.statedRate) / 100, diff = d.amount - exp;
+      rows.push(`<li class="line bad"><span class="lbl">${esc(d.label)}</span><i class="dots"></i><span class="amt">−${money(d.amount)}${CIRCLE}</span></li>`
+        + `<li class="note">${diff > 0 ? '+' : '−'}${money(Math.abs(diff))} <small>vs ${d.statedRate}% of the sale</small></li>`);
+    } else {
+      rows.push(`<li class="line"><span class="lbl">${esc(d.label)} <small>${pct(d.amount)}</small></span><i class="dots"></i><span class="amt">−${money(d.amount)}</span></li>`);
+    }
+  }
+  $('lines').innerHTML = rows.join('');
   $('netAmt').textContent = money(r.net);
-  const perKg = r.netPerKg ? ` · <b>${money(r.netPerKg)} / kg</b>` : '';
-  $('netSub').innerHTML = `from ${money(r.gross)} sold${perKg}`;
-  const parts = [{ label: 'You received', amount: r.net, color: '#2f6b4f' },
-    ...r.deductions.map((d, i) => ({ label: d.label, amount: d.amount, color: COLORS[i % COLORS.length], d }))];
-  $('stack').innerHTML = parts.map((p) => `<span style="width:${(100 * p.amount) / r.gross}%;background:${p.color}"></span>`).join('');
-  $('legend').innerHTML = parts.map((p) => {
-    const pct = ((100 * p.amount) / r.gross).toFixed(p.d ? 2 : 1);
-    return `<li><i style="background:${p.color}"></i>${esc(p.label)} ${p.d ? money(p.amount) + ` (${pct}%)` : pct + '%'}</li>`;
-  }).join('');
+  const perKg = r.netPerKg ? ` · ${money(r.netPerKg)} / kg` : '';
+  $('netSub').textContent = `${pct(r.net)} of the sale${perKg}`;
   const bad = r.deductions.filter((d) => d.rateOk === false);
   const other = r.warnings.filter((w) => !w.id.startsWith('rate:'));
+  if (bad.length) stamp('red', bad.length === 1 ? 'Check 1 line' : `Check ${bad.length} lines`);
+  else if (other.length) stamp('amber', 'Look at photo');
+  else stamp('green', 'Checked');
   $('alerts').innerHTML = bad.map((d) => {
     const exp = (r.gross * d.statedRate) / 100;
-    return `<div class="alert"><b>Check this line.</b> “${esc(d.label)}” says ${d.statedRate}%, but ${d.statedRate}% of ${money(r.gross)} is ${money(exp)}. You were charged ${money(d.amount)} (${d.amount > exp ? '+' : ''}${money(d.amount - exp)}).</div>`;
-  }).join('') + other.map((w) => `<div class="alert">${esc(w.detail)}</div>`).join('')
-    + (r.allClear ? '<div class="alert ok">Every row and total adds up.</div>' : '');
+    return `<div class="alert"><b>${esc(d.label)}</b> says ${d.statedRate}%. ${d.statedRate}% of ${money(r.gross)} is ${money(exp)}, but ${money(d.amount)} was charged.</div>`;
+  }).join('') + other.map((w) => `<div class="alert">${esc(w.detail)}</div>`).join('');
   $('checksSum').textContent = `${r.checks.filter((c) => c.ok).length}/${r.checks.length} checks passed${r.salvaged ? ' · recovered from a damaged read' : ''}`;
-  $('checks').innerHTML = r.checks.map((c) => `<li>${c.ok ? '✓' : '⚠'} ${esc(c.detail)}</li>`).join('');
+  $('checks').innerHTML = plainChecks(r).map(([ok, t]) => `<li class="${ok ? 'ok' : 'no'}"><span>${esc(t)}</span><b>${ok ? '✓' : '!'}</b></li>`).join('');
   show('s-result');
+}
+
+/** The engine's checks, said the way a farmer would check them by hand. */
+function plainChecks(r) {
+  const out = [];
+  for (const i of r.items) {
+    const c = r.checks.find((x) => x.id === 'row:' + (i.product || '?'));
+    out.push([!c || c.ok || c.minor, `${i.product || 'Row'}  ${i.qty.toLocaleString('en-US')} × ${money(i.price)} = ${money(i.amount)}`]);
+  }
+  const g = r.checks.find((x) => x.id === 'gross');
+  if (g) out.push([g.ok, `Rows add up to ${money(r.gross)}`]);
+  for (const d of r.deductions) if (d.statedRate) {
+    out.push([d.rateOk !== false, `${d.label}: ${d.statedRate}% of ${money(r.gross)} = ${money((r.gross * d.statedRate) / 100)}, charged ${money(d.amount)}`]);
+  }
+  const t = r.checks.find((x) => x.id === 'total_deductions');
+  if (t) out.push([t.ok, `Deductions add up to ${money(r.totalDeductions)}`]);
+  const n = r.checks.find((x) => x.id === 'net');
+  if (n) out.push([n.ok, `${money(r.gross)} − ${money(r.totalDeductions)} = ${money(r.net)}`]);
+  for (const c of r.checks) if (c.id.startsWith('misread:') || c.id === 'lines') out.push([false, c.detail]);
+  return out;
 }
 
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));

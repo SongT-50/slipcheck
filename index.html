@@ -19,8 +19,19 @@
 <main>
   <!-- Screen 1: scan -->
   <section id="s-scan" class="screen">
+    <div class="hero-slip" aria-hidden="true">
+      <div class="paper mini">
+        <div class="ml"><span>Sold</span><i></i><span>2,380,000</span></div>
+        <div class="ml bad"><span>Commission 7%</span><i></i><span class="circ">−181,000</span></div>
+        <div class="ml"><span>Transport</span><i></i><span>−120,000</span></div>
+        <div class="mt"><span>You received</span><b>2,043,000</b></div>
+        <div class="stamp red mini-stamp">Check 1 line</div>
+      </div>
+    </div>
     <h1>Know what you actually got paid.</h1>
-    <p class="sub">Photograph your sale settlement slip. It is read <b>on this device</b> — nothing leaves your phone.</p>
+    <p class="sub">Photograph your sale slip. SlipCheck reads it <b>on this phone</b>, checks every line, and circles anything that doesn't add up.</p>
+    <label class="btn primary" for="photo">Take photo</label>
+    <details class="cur"><summary id="curSum">Currency</summary>
     <label class="field">Currency
       <select id="currency">
         <option value="KRW|₩">₩ Korean won</option>
@@ -29,7 +40,7 @@
         <option value="USD|$">$ US dollar</option>
       </select>
     </label>
-    <label class="btn primary" for="photo">Take photo</label>
+    </details>
     <input id="photo" type="file" accept="image/*" capture="environment" hidden>
     <div class="samples">
       <span>Or try a sample slip:</span>
@@ -41,7 +52,7 @@
     <div id="history" hidden>
       <h2>Your past slips</h2>
       <p class="hint">Saved on this device only.</p>
-      <button id="seasonBtn" class="btn" hidden>This season — where did my money go?</button>
+      <button id="seasonBtn" class="season-card" hidden><span class="sc-k">This season</span><b id="seasonPeek">Where did my money go?</b><span class="sc-go">Open the ledger →</span></button>
       <ul id="histList" class="hist"></ul>
       <button id="histClear" class="link">Delete all</button>
     </div>
@@ -51,7 +62,7 @@
   <section id="s-check" class="screen" hidden>
     <h2>Is the writing upright?</h2>
     <p class="sub">Turn the photo until you can read it. Sideways text cannot be read reliably.</p>
-    <img id="checkImg" alt="Your slip" class="check">
+    <div class="photo-frame"><img id="checkImg" alt="Your slip" class="check"></div>
     <div class="row">
       <button id="turnL" class="btn" aria-label="Turn left">↺ Turn</button>
       <button id="turnR" class="btn" aria-label="Turn right">Turn ↻</button>
@@ -61,50 +72,62 @@
 
   <!-- Reading -->
   <section id="s-read" class="screen" hidden>
-    <img id="preview" alt="Your slip">
+    <div class="scan-wrap">
+      <div class="scan"><img id="preview" alt="Your slip"><i class="scanline" aria-hidden="true"></i></div>
+      <ol id="ticks" class="ticks" aria-live="polite"></ol>
+    </div>
+    <p class="offline-big">No internet needed · read on this phone</p>
     <h2 id="readMsg">Reading on your device…</h2>
     <div class="prog"><span id="bar"></span></div>
-    <p class="hint"><span id="secs">0</span> s · usually 35–90 s · works offline</p>
+    <p class="hint"><span id="secs">0</span> s · usually 35–90 s · your photo never leaves the phone</p>
   </section>
 
-  <!-- Screen 2: result -->
-  <section id="s-result" class="screen" hidden>
-    <p class="label">What you actually got</p>
-    <div id="netAmt" class="big"></div>
-    <p id="netSub" class="sub"></p>
-    <div id="stack" class="stack"></div>
-    <ul id="legend" class="legend"></ul>
+  <!-- Screen 2: result — the slip itself, marked up like an auditor's red pen -->
+  <section id="s-result" class="screen slip-screen" hidden>
+    <div class="paper" id="paper">
+      <div class="paper-head"><span>SLIPCHECK</span><span id="where"></span></div>
+      <ul id="lines" class="lines"></ul>
+      <div class="total-row"><span>You received</span><b id="netAmt"></b></div>
+      <p id="netSub" class="paper-sub"></p>
+      <div id="stamp" class="stamp" hidden></div>
+    </div>
     <div id="alerts"></div>
-    <details><summary id="checksSum"></summary><ul id="checks" class="checks"></ul></details>
-    <p id="where" class="hint"></p>
-    <button id="speak" class="btn">🔊 Read it to me</button>
+    <button id="speak" class="btn primary speak">🔊 Read it to me</button>
     <div class="row">
       <button id="again" class="btn">Scan another</button>
       <button id="explain" class="btn cloud">Explain (cloud)</button>
     </div>
+    <details><summary id="checksSum"></summary><ul id="checks" class="checks"></ul></details>
+    <div id="stack" hidden></div><ul id="legend" hidden></ul>
   </section>
 
   <!-- Season ledger -->
-  <section id="s-season" class="screen" hidden>
-    <p class="label">This season, deductions took</p>
-    <div id="seasonDed" class="big red"></div>
-    <p id="seasonDedSub" class="sub"></p>
-    <p id="seasonSub" class="hint"></p>
-    <h2>By line</h2>
-    <ul id="seasonLabels" class="bars"></ul>
-    <div id="seasonAgentsWrap">
-      <h2>By agent — share of the sale deducted</h2>
-      <ul id="seasonAgents" class="bars agents"></ul>
+  <section id="s-season" class="screen slip-screen" hidden>
+    <div class="paper ledger">
+      <div class="paper-head"><span>SEASON LEDGER</span><span id="seasonSub"></span></div>
+      <p class="ledger-k">Deductions took</p>
+      <div id="seasonDed" class="ledger-big"></div>
+      <p id="seasonDedSub" class="paper-sub left"></p>
+      <h3 class="ledger-h">By line</h3>
+      <ul id="seasonLabels" class="bars"></ul>
+      <div id="seasonAgentsWrap">
+        <h3 class="ledger-h">By agent · share of the sale deducted</h3>
+        <ul id="seasonAgents" class="bars agents"></ul>
+      </div>
+      <h3 class="ledger-h">Slip by slip</h3>
+      <ul id="seasonSlips" class="slipline"></ul>
     </div>
     <div id="seasonFlag" class="alert" hidden></div>
-    <p class="hint">Added up on this device from your saved slips. Nothing is uploaded.</p>
+    <p class="hint">Added up on this phone from your verified slips. Nothing is uploaded.</p>
     <button id="seasonBack" class="btn">Back</button>
   </section>
 
   <!-- Screen 3: cloud explain -->
-  <section id="s-cloud" class="screen" hidden>
-    <h2>Explain</h2>
-    <p id="cloudMsg" class="sub"></p>
+  <section id="s-cloud" class="screen slip-screen" hidden>
+    <div class="paper note-paper">
+      <div class="paper-head"><span>WHAT EACH LINE IS FOR</span><span>Explained in the cloud · only line names were sent</span></div>
+      <p id="cloudMsg"></p>
+    </div>
     <button id="back" class="btn">Back</button>
   </section>
 </main>
