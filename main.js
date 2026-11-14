@@ -243,9 +243,12 @@ async function renderHome() {
   $('home').hidden = !returning;
   document.querySelector('#s-scan .tips').classList.toggle('compact', returning);
   if (!returning) return;
+  // the board follows the currency of the latest slip (a season is one market, one currency)
+  const keep = curSel.value; curSel.value = rows[0].currency || keep;
   const L = buildLedger(rows, curSel.value);
   const ok = Number.isFinite(L.share);
   $('hcRecv').textContent = ok ? money(L.received) : '—';
+  curSel.value = keep;
   $('hcDed').textContent = ok ? (100 * L.share).toFixed(1) + '%' : '—';
   $('hcN').textContent = String(L.count);
   $('hcFlag').hidden = !L.flagged;

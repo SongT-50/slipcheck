@@ -213,3 +213,5 @@ footer{padding-bottom:12px}
 .tips.compact svg{width:26px;height:26px}
 .tips.compact span{display:none}
 .hist .flag.chk{color:#fff;background:var(--pen);border-radius:999px;padding:2px 9px}
+/* the tilted mini slip needs room above the headline */
+.hero-slip{padding-bottom:18px}

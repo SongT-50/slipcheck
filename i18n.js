@@ -282,8 +282,10 @@ export function pickUiLang(pref) {
 export function setLang(l) { lang = D[l] ? l : 'en'; document.documentElement.lang = lang; }
 export function getLang() { return lang; }
 /** Translate a key; {name} placeholders filled from vars. Falls back to English. */
+const APP_WORD = { 'This browser': 'This phone', 'this browser': 'this phone', '이 브라우저': '이 휴대폰', 'Este navegador': 'Este teléfono', 'इस ब्राउज़र': 'इस फ़ोन' };
 export function t(key, vars = {}) {
-  const s = (D[lang] && D[lang][key]) ?? D.en[key] ?? key;
+  let s = (D[lang] && D[lang][key]) ?? D.en[key] ?? key;
+  if (self.SlipNative) s = s.replace(/This browser|this browser|이 브라우저|Este navegador|इस ब्राउज़र/g, (m) => APP_WORD[m]); // Android app
   return s.replace(/\{(\w+)\}/g, (_, k) => (k in vars ? vars[k] : `{${k}}`));
 }
 /** Apply to every [data-i18n] (text) and [data-i18n-html] (trusted strings with <b>) in the page. */
