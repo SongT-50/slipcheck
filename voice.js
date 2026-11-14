@@ -89,10 +89,18 @@ export function plan(r, cur, lang, T) {
   if (lang === 'ko') {
     const c = ['KRW', 'INR', 'MXN', 'USD'].includes(cur) ? cur : 'KRW';
     const num = (n) => numberClips(n, lang, dec(n));
-    out.push('p_got', ...num(r.net), `c_${c}_end`, '|', 'p_sold', ...num(r.gross), `c_${c}_end`, '|',
-      'p_ded', ...num(r.totalDeductions), `c_${c}_end`, '|', 'p_pct_pre', ...pct, 'p_pct', '|');
+    // won: the last number unit and "원입니다." are one recorded piece, so there is no join there
+    const said = (n) => {
+      const ids = num(n);
+      if (c === 'KRW' && /_f$/.test(ids[ids.length - 1])) return [...ids.slice(0, -1), ids[ids.length - 1] + '_KRW'];
+      return [...ids, `c_${c}_end`];
+    };
+    const pctIds = pct[pct.length - 1].startsWith('dd') && pct.includes('point')
+      ? [...pct.slice(0, -1), pct[pct.length - 1] + '_pct'] : [...pct, 'p_pct'];
+    out.push('p_got', ...said(r.net), '|', 'p_sold', ...said(r.gross), '|',
+      'p_ded', ...said(r.totalDeductions), '|', 'p_pct_pre', ...pctIds, '|');
     for (const d of r.deductions) {
-      out.push(labelClip(d.label, T), ...num(d.amount), `c_${c}_list`, '|');
+      out.push(labelClip(d.label, T), ...(c === 'KRW' ? said(d.amount) : [...num(d.amount), `c_${c}_list`]), '|');
       if (d.rateOk === false) out.push(labelClip(d.label, T), 'p_bad', '|');
     }
   } else {

@@ -97,6 +97,35 @@ def main():
                             '-c:a', 'libmp3lame', '-b:a', '64k', dst], check=True)
             done.add(u)
     print('units:', len(done))
+    combos()
+
+
+def combos():
+    """The last number unit and the ending, cut as ONE piece from the same sentence ("…삼천 원입니다.", "…점 이 퍼센트입니다."),
+    so the join that sounds worst — number into currency — does not exist. Uses the cached carriers; no new recordings."""
+    made = 0
+    for i, parts in enumerate(carriers()):
+        cj, ca = os.path.join(CACHE, f'{i:03d}.json'), os.path.join(CACHE, f'{i:03d}.mp3')
+        if not os.path.exists(cj): continue
+        al = json.load(open(cj, encoding='utf-8'))['alignment']
+        st, en = al['character_start_times_seconds'], al['character_end_times_seconds']
+        pos, starts = 0, []
+        for p, u in parts: starts.append(pos); pos += len(p)
+        for j, (p, u) in enumerate(parts):
+            tail = ''.join(q for q, _ in parts[j + 1:])
+            cid = None
+            if u and u.endswith('_f') and tail == ' 원입니다.': cid = u + '_KRW'
+            if u and u.startswith('dd') and tail == ' 퍼센트입니다.': cid = u + '_pct'
+            if not cid: continue
+            dst = os.path.join(OUT, cid + '.mp3')
+            if os.path.exists(dst): continue
+            t0, t1 = st[starts[j]], en[len(''.join(q for q, _ in parts)) - 1]
+            dur = t1 - t0
+            subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-ss', f'{t0:.3f}', '-t', f'{dur:.3f}', '-i', ca,
+                            '-af', f'afade=t=in:d=0.008,afade=t=out:st={max(0, dur - 0.03):.3f}:d=0.03', '-ac', '1',
+                            '-c:a', 'libmp3lame', '-b:a', '64k', dst], check=True)
+            made += 1
+    print('combos:', made)
 
 
 if __name__ == '__main__':
