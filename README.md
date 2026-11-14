@@ -1,4 +1,4 @@
-# SlipCheck — know what you actually got paid, and which agent takes more
+# SlipCheck — know what you actually got paid
 
 Hundreds of millions of small farmers sell their produce through commission agents. What they get back is a paper settlement slip: what was sold, what was deducted, what is left. SlipCheck reads that slip **on the device** and checks the arithmetic, so a farmer can see what they really received and which line does not add up. It works with no connection.
 
@@ -33,7 +33,7 @@ Two ways to use it: on a **farmers' group or market office PC** with Chrome's on
 More, all on the device:
 - **Check the photo first.** Sideways text makes a small model invent a different slip whose numbers still add up, so SlipCheck detects a sideways photo from its table lines, turns it, and asks for one tap before reading.
 - **It never accuses on a slip it could not verify.** If the lines and the printed totals cannot be reconciled, it reads once more; if it still cannot, it asks for a new photo instead of showing a number.
-- **Season ledger: which agent takes more.** Every verified slip is added up: how much deductions took this season, by line, and the share of the sale each agent deducted.
+- **Season ledger: your own record.** Every verified slip is added up on the device: how much deductions took this season, by line and by issuer.
 - **Read it to me.** The result is spoken in the farmer's language with the device's own voice. The sentences are built by code from the verified numbers.
 - **In the farmer's language.** Screens and read-aloud in English, 한국어, Español and हिन्दी (phone language by default, changeable in Settings). Labels on the slip stay as printed.
 

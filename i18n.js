@@ -6,7 +6,7 @@ export const LANGS = { en: 'English', ko: '한국어', es: 'Español', hi: 'ह�
 const D = {
   en: {
     tagline: 'Know what you actually got paid.',
-    scanSub: "Photograph your sale slips. SlipCheck reads them <b>on this device</b>, circles any line that doesn't add up, and keeps a season ledger: <b>which agent takes more of your money</b>.",
+    scanSub: "Photograph your sale slips. SlipCheck reads them <b>on this device</b>, circles any line that doesn't add up, and keeps <b>your own season record</b> of what deductions took.",
     takePhoto: 'Take photo', trySample: 'Or try a sample slip:', currency: 'Currency', change: 'change',
     tipFlat: 'Flat', tipFlatSub: 'on a table, no folds', tipBright: 'Bright', tipBrightSub: 'daylight, no shadow', tipWhole: 'Whole slip', tipWholeSub: 'straight on, all edges in',
     tabScan: 'Scan', tabHistory: 'History', tabLedger: 'Ledger', tabSettings: 'Settings',
@@ -64,7 +64,7 @@ const D = {
   },
   ko: {
     tagline: '실제로 받은 돈을 확인하세요.',
-    scanSub: "정산서를 찍으세요. SlipCheck가 <b>이 기기 안에서</b> 읽고, 계산이 안 맞는 줄에 동그라미를 치고, 시즌 장부로 <b>어느 위탁상이 더 떼는지</b> 보여 줍니다.",
+    scanSub: "정산서를 찍으세요. SlipCheck가 <b>이 기기 안에서</b> 읽고, 계산이 안 맞는 줄에 동그라미를 치고, 공제가 얼마나 나갔는지 <b>내 시즌 기록</b>으로 모아 줍니다.",
     takePhoto: '사진 찍기', trySample: '견본 정산서로 해 보기:', currency: '통화', change: '바꾸기',
     tipFlat: '평평하게', tipFlatSub: '탁자 위에, 접지 말고', tipBright: '밝게', tipBrightSub: '햇빛, 그림자 없이', tipWhole: '한 장 전체', tipWholeSub: '정면에서, 네 귀퉁이까지',
     tabScan: '찍기', tabHistory: '기록', tabLedger: '장부', tabSettings: '설정',
@@ -122,7 +122,7 @@ const D = {
   },
   es: {
     tagline: 'Sepa cuánto le pagaron de verdad.',
-    scanSub: "Fotografíe sus liquidaciones. SlipCheck las lee <b>en este dispositivo</b>, marca cualquier línea que no cuadre y lleva un libro de temporada: <b>qué comisionista se queda con más de su dinero</b>.",
+    scanSub: "Fotografíe sus liquidaciones. SlipCheck las lee <b>en este dispositivo</b>, marca con un círculo cualquier línea que no cuadre y guarda <b>su propio registro de la temporada</b> de lo que se llevaron las deducciones.",
     takePhoto: 'Tomar foto', trySample: 'O pruebe un ejemplo:', currency: 'Moneda', change: 'cambiar',
     tipFlat: 'Plana', tipFlatSub: 'sobre una mesa, sin dobleces', tipBright: 'Con luz', tipBrightSub: 'luz de día, sin sombra', tipWhole: 'Completa', tipWholeSub: 'de frente, con los bordes',
     tabScan: 'Escanear', tabHistory: 'Historial', tabLedger: 'Libro', tabSettings: 'Ajustes',
@@ -180,7 +180,7 @@ const D = {
   },
   hi: {
     tagline: 'जानिए आपको सच में कितना पैसा मिला।',
-    scanSub: "अपनी बिक्री पर्चियों की फ़ोटो लें। SlipCheck उन्हें <b>इसी डिवाइस पर</b> पढ़ता है, जो पंक्ति हिसाब से न मिले उस पर गोला लगाता है, और सीज़न बही रखता है: <b>कौन-सा आढ़ती आपका ज़्यादा पैसा काटता है</b>।",
+    scanSub: "अपनी बिक्री पर्चियों की फ़ोटो लें। SlipCheck उन्हें <b>इसी डिवाइस पर</b> पढ़ता है, जो पंक्ति हिसाब से न मिले उस पर गोला लगाता है, और कटौतियों का <b>आपका अपना सीज़न रिकॉर्ड</b> रखता है।",
     takePhoto: 'फ़ोटो लें', trySample: 'या नमूना पर्ची आज़माएँ:', currency: 'मुद्रा', change: 'बदलें',
     tipFlat: 'सपाट', tipFlatSub: 'मेज़ पर, बिना मोड़', tipBright: 'रोशनी में', tipBrightSub: 'दिन की रोशनी, छाया नहीं', tipWhole: 'पूरी पर्ची', tipWholeSub: 'सीधे सामने से, सब किनारे',
     tabScan: 'स्कैन', tabHistory: 'इतिहास', tabLedger: 'बही', tabSettings: 'सेटिंग',
