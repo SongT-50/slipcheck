@@ -33,7 +33,7 @@ function applyLang() {
 }
 langSel.addEventListener('change', () => {
   try { localStorage.setItem('slipcheck.lang', langSel.value); } catch (_) {}
-  applyLang(); curLabel();
+  applyLang(); curLabel(); netPill();
   if (!$('s-history').hidden) showHistory();
   if (last?.result && !$('s-result').hidden) render(last.result, last);
 });
@@ -212,7 +212,7 @@ async function showHistory() {
     const src = r.thumb ? (thumbs[thumbs.push(URL.createObjectURL(r.thumb)) - 1]) : '';
     const li = document.createElement('li');
     li.innerHTML = `<button><img alt="" ${src ? `src="${src}"` : ''}><span><b>${esc(net)}</b>`
-      + `<small>${new Date(r.ts).toLocaleString(getLang())}${r.explainPending ? ' · ' + t('explainLater') : ''}</small></span>`
+      + `<small>${new Date(r.ts).toLocaleString(getLang(), { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}${r.explainPending ? ' · ' + t('explainLater') : ''}</small></span>`
       + `<span class="flag ${verified && !flagged ? 'ok' : ''}">${!verified ? t('stampRetake') : flagged ? '!' : '✓'}</span></button>`;
     li.querySelector('button').addEventListener('click', () => {
       curSel.value = r.currency; last = r; render(r.result, r);
@@ -356,12 +356,12 @@ function plainChecks(r) {
   const out = [];
   for (const i of r.items) {
     const c = r.checks.find((x) => x.id === 'row:' + (i.product || '?'));
-    out.push([!c || c.ok || c.minor, `${i.product || 'Row'}  ${i.qty.toLocaleString('en-US')} × ${money(i.price)} = ${money(i.amount)}`]);
+    out.push([!c || c.ok || c.minor, `${i.product || t('row')}  ${i.qty.toLocaleString('en-US')} × ${money(i.price)} = ${money(i.amount)}`]);
   }
   const g = r.checks.find((x) => x.id === 'gross');
   if (g) out.push([g.ok, t('rowsAdd', { x: money(r.gross) })]);
   for (const d of r.deductions) if (d.statedRate) {
-    out.push([d.rateOk !== false, `${d.label}: ${d.statedRate}% of ${money(r.gross)} = ${money((r.gross * d.statedRate) / 100)}, charged ${money(d.amount)}`]);
+    out.push([d.rateOk !== false, t('rateCheck', { label: d.label, r: d.statedRate, gross: money(r.gross), exp: money((r.gross * d.statedRate) / 100), amt: money(d.amount) })]);
   }
   const td = r.checks.find((x) => x.id === 'total_deductions');
   if (td) out.push([td.ok, t('dedAdd', { x: money(r.totalDeductions) })]);

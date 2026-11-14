@@ -58,6 +58,8 @@ const D = {
     slipsN: "{n} slips",
     flaggedN: "{n} slips had a line that did not match its stated percentage.",
     explainLater: "explain when online",
+    rateCheck: "{label}: {r}% of {gross} = {exp}, charged {amt}",
+    row: "Row",
     back: 'Back', footer: 'Sample slips are fictional. SlipCheck checks arithmetic; it does not judge whether a fee is fair.',
   },
   ko: {
@@ -114,6 +116,8 @@ const D = {
     slipsN: "{n}장",
     flaggedN: "{n}장에 적힌 비율과 맞지 않는 줄이 있었습니다.",
     explainLater: "연결되면 설명",
+    rateCheck: "{label}: {gross}의 {r}% = {exp}, 뗀 돈 {amt}",
+    row: "품목",
     back: '뒤로', footer: '견본 정산서는 가상입니다. SlipCheck는 계산을 확인하며, 수수료가 적정한지는 판단하지 않습니다.',
   },
   es: {
@@ -170,6 +174,8 @@ const D = {
     slipsN: "{n} liquidaciones",
     flaggedN: "{n} liquidaciones tenían una línea que no coincidía con su porcentaje.",
     explainLater: "explicar al conectar",
+    rateCheck: "{label}: el {r}% de {gross} = {exp}, cobrado {amt}",
+    row: "Fila",
     back: 'Volver', footer: 'Las liquidaciones de ejemplo son ficticias. SlipCheck revisa las cuentas; no juzga si una comisión es justa.',
   },
   hi: {
@@ -226,6 +232,8 @@ const D = {
     slipsN: "{n} पर्चियाँ",
     flaggedN: "{n} पर्चियों में एक पंक्ति लिखे प्रतिशत से मेल नहीं खाती थी।",
     explainLater: "जुड़ने पर समझाएँ",
+    rateCheck: "{label}: {gross} का {r}% = {exp}, काटा गया {amt}",
+    row: "पंक्ति",
     back: 'वापस', footer: 'नमूना पर्चियाँ काल्पनिक हैं। SlipCheck हिसाब जाँचता है; कमीशन उचित है या नहीं, यह तय नहीं करता।',
   },
 };
