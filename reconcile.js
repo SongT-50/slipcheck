@@ -153,6 +153,10 @@ export function reconcile(raw, opts = {}) {
       const N = nets.find((v) => Math.abs(acc + v - gross) <= 0.005 && v > acc);
       if (N === undefined) continue;
       const rest = regular.slice(k).filter((d) => d.amount !== N);
+      // Only a single trailing line (the printed subtotal) may be set aside. If more lines would be dropped, the
+      // "net" is more likely a misread that happens to fit a prefix (seen: 48,825 = 52,500 − first two fees),
+      // and dropping real fee lines would show a confident wrong answer.
+      if (rest.length > 1) continue;
       netLines.push(N);
       for (const d of rest) {
         if (Math.abs(d.amount - acc) <= 0.005) { subtotals.push(d.amount); } else add('misread:' + d.label, false, `“${d.label}” reads ${d.amount}, but the lines above add up to ${acc} and match the slip's net — please look at the photo`);

@@ -33,3 +33,7 @@ PHOTO_EXPECT_FLAG['photo_mild_slip_ko_mismatch.jpg'] = true;
 // Real phone photo (printed Korean mismatch slip, tilted, keyboard behind): 공제 합계 337,000 read as 33,700. Rule 3a.
 PHOTO_RAW['real_4.jpg'] = '{"items":[{"product":"사과(부사)","unit":"10kg","qty":"40","unit_price":"38,500","amount":"1,540,000"},{"product":"배(신고)","unit":"15kg","qty":"20","unit_price":"42,000","amount":"840,000"}],"gross":"2,380,000","deductions":[{"label":"위탁수수료(7%)","rate_pct":"7","amount":"181,000"},{"label":"하역비","rate_pct":"","amount":"36,000"},{"label":"운송비","rate_pct":"","amount":"120,000"},{"label":"공제 합계","rate_pct":"","amount":"33,700"},{"label":"차감 정산액","rate_pct":"","amount":"2,043,000"}],"total_deductions":"2,043,000","net":"0"}';
 PHOTO_EXPECT_FLAG['real_4.jpg'] = true;
+
+// A misread net that happens to equal gross − the first two fees (52,500 − 3,150 − 525 = 48,825). Rule 3a must NOT
+// drop the three real fee lines after it. Seen when two half-photo reads were merged (strip test, 11/14).
+RETAKE_RAW['merged_wrong_net'] = '{"items":[{"product":"Tomato","unit":"crate 25 kg","qty":"40","unit_price":"450","amount":"18,000"},{"product":"Onion","unit":"bag 50 kg","qty":"30","unit_price":"1,150","amount":"34,500"}],"gross":"52,500","deductions":[{"label":"Commission @ 6%","rate_pct":"6","amount":"3,150"},{"label":"Market fee @ 1%","rate_pct":"1","amount":"525"},{"label":"Hamali (labour)","amount":"700"},{"label":"Weighing","amount":"140"},{"label":"Transport","amount":"1,800"}],"total_deductions":"","net":"48,825"}';
