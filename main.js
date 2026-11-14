@@ -9,7 +9,7 @@ import { script, speak, stopSpeaking } from './speak.js';
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 
 const $ = (id) => document.getElementById(id);
-const screens = ['s-scan', 's-check', 's-read', 's-result', 's-cloud', 's-season', 's-history', 's-settings'];
+const screens = ['s-scan', 's-check', 's-read', 's-result', 's-cloud', 's-season', 's-history', 's-settings', 's-consent'];
 // which bottom tab is lit for each screen
 const TAB_OF = { 's-history': 'history', 's-season': 'ledger', 's-settings': 'settings' };
 const show = (id) => {
@@ -38,7 +38,11 @@ function netPill() {
   $('net').textContent = on ? 'ONLINE' : 'OFFLINE · ON-DEVICE';
   $('net').classList.toggle('off', !on);
 }
-addEventListener('online', () => { netPill(); showHistory(); });
+addEventListener('online', () => {
+  netPill(); showHistory();
+  // keep the promise made offline: explain as soon as the connection is back
+  if (!$('s-cloud').hidden && last?.result) { $('cloudHead').textContent = 'Explained in the cloud · only line names were sent'; explainNow(); }
+});
 addEventListener('offline', netPill); netPill();
 onDeviceStatus().then((s) => {
   $('device').textContent = s === 'available' ? 'On-device AI is ready on this device.'
@@ -55,6 +59,7 @@ async function check(file) {
   const bmp = await createImageBitmap(file); // applies the camera's EXIF orientation
   chk = { bmp, turns: guessTurns(bmp), url: null };
   const q = photoQuality(bmp);
+  lastQuality = q;
   const msg = q.blurry && q.dark ? 'This photo looks dark and blurry. Retake it in daylight, holding the phone still.'
     : q.blurry ? 'This photo looks blurry. Hold the phone still and tap the screen to focus, then retake.'
     : q.dark ? 'This photo looks dark. Move to daylight or turn on a light, then retake.' : '';
@@ -72,7 +77,7 @@ $('turnL').addEventListener('click', async () => { chk.turns += 3; await drawChe
 $('turnR').addEventListener('click', async () => { chk.turns += 1; await drawCheck(); });
 $('readIt').addEventListener('click', () => run(chk.blob));
 document.querySelectorAll('[data-sample]').forEach((b) => b.addEventListener('click', async () => {
-  curSel.value = b.dataset.cur;
+  curSel.value = b.dataset.cur; lastQuality = null;
   run(await (await fetch(b.dataset.sample)).blob());
 }));
 $('again').addEventListener('click', () => { showHistory(); show('s-scan'); });
@@ -88,8 +93,10 @@ $('curSum').addEventListener('click', () => show('s-settings'));
 $('back').addEventListener('click', () => show('s-result'));
 $('explain').addEventListener('click', () => {
   if (navigator.onLine) {
+    $('cloudHead').textContent = 'Explained in the cloud · only line names were sent';
     explainNow();
   } else {
+    $('cloudHead').textContent = 'Offline · will explain when you reconnect';
     $('cloudMsg').textContent = 'You are offline. Your result is saved on this device; the explanation will be ready when you reconnect.';
     if (last?.id) updateSlip(last.id, { explainPending: true });
   }
@@ -207,9 +214,38 @@ $('histClear').addEventListener('click', async () => {
 });
 showHistory();
 
-async function run(blob) {
+// ---- where a slip is read: on this device by default; the cloud only with the user's OK ----
+let lastBlob = null, pendingBlob = null, lastQuality = null;
+// A photo too blurry or dark for this device is never sent to the cloud either: a cloud model can invent
+// numbers that still add up (seen 11/14: a blurred slip came back as 2,010 / 201 / 1,809 and passed the checks).
+const tooPoor = () => !!(lastQuality && (lastQuality.blurry || lastQuality.dark));
+function askCloud(blob, why) {
+  pendingBlob = blob;
+  const online = navigator.onLine;
+  $('consentWhy').textContent = why === 'unverified' ? 'This device could not verify its reading' : 'No on-device AI in this browser';
+  $('consentText').textContent = why === 'unverified'
+    ? 'SlipCheck read this slip twice on this device, but the numbers did not add up, so it shows no number. Gemini in the cloud can try once more.'
+    : online ? 'This browser has no on-device AI, so it cannot read the slip without sending it. Gemini in the cloud can read it instead.'
+      : 'This browser has no on-device AI, and you are offline. Connect to read it in the cloud, or use Chrome on a computer with on-device AI.';
+  if (tooPoor()) {
+    $('consentWhy').textContent = 'Photo too blurry or dark';
+    $('consentText').textContent = 'This photo is too unclear to read reliably anywhere, so SlipCheck will not send it. Please retake it: flat, in daylight, with the whole slip in the frame.';
+  }
+  $('cloudYes').hidden = !online || tooPoor();
+  show('s-consent');
+}
+$('cloudYes').addEventListener('click', () => { if (pendingBlob) run(pendingBlob, 'cloud'); });
+$('cloudNo').addEventListener('click', () => show('s-scan'));
+$('cloudRetry').addEventListener('click', () => { if (lastBlob) askCloud(lastBlob, 'unverified'); });
+
+async function run(blob, where = 'device') {
+  if (where === 'device' && (await onDeviceStatus()) !== 'available') { askCloud(blob, 'no-device'); return; }
+  lastBlob = blob;
   $('preview').src = URL.createObjectURL(blob);
-  $('readMsg').textContent = 'Reading on your device…';
+  const cloud = where === 'cloud';
+  $('readMsg').textContent = cloud ? 'Reading in the cloud…' : 'Reading on your device…';
+  $('readWhere').textContent = cloud ? 'Reading in the cloud · you allowed it' : 'No internet needed · read on this device';
+  $('readNote').textContent = cloud ? 'usually under 15 s · this photo is sent once' : 'usually 35–90 s · your photo stays on this device';
   $('ticks').innerHTML = '';
   show('s-read');
   const t0 = performance.now();
@@ -226,17 +262,17 @@ async function run(blob) {
       const li = document.createElement('li'); li.textContent = `line ${shown + 1}`; $('ticks').append(li);
     }
   };
-  const read = async () => { shown = 0; $('ticks').innerHTML = ''; try { return await extractSlip(blob, { onChunk }); } catch (e) { return { raw: '', stopped: String(e) }; } };
+  const read = async () => { shown = 0; $('ticks').innerHTML = ''; try { return await extractSlip(blob, { onChunk, where }); } catch (e) { return { raw: '', stopped: String(e) }; } };
   let out = await read(), result = reconcile(out.raw);
   // Second read: the on-device model is not deterministic, so a scrambled or cut-off read often comes out
   // right the next time. Keep whichever read reconciles.
-  if (result.unreliable || out.stopped) {
+  if (!cloud && (result.unreliable || out.stopped)) {
     $('readMsg').textContent = 'Reading again to double-check…';
     const out2 = await read(), result2 = reconcile(out2.raw);
     if (!result2.unreliable || result.unreliable) { out = { ...out2, retried: true }; result = result2; }
   }
   clearInterval(tick);
-  last = { ...out, sec: (performance.now() - t0) / 1000, result, currency: curSel.value };
+  last = { ...out, source: out.source === 'unknown' ? (cloud ? 'in_cloud' : 'on_device') : out.source, sec: (performance.now() - t0) / 1000, result, currency: curSel.value, live: true };
   window.SLIPCHECK_LAST = last; // for testing
   render(last.result, last);
   if (out.raw) {
@@ -246,7 +282,7 @@ async function run(blob) {
   }
 }
 
-const WHERE = { on_device: 'Read on this device', in_cloud: 'Read in the cloud (no on-device model here)' };
+const WHERE = { on_device: 'Read on this device', in_cloud: 'Read in the cloud · you allowed it' };
 // Red-pen circle drawn around a wrong amount (one SVG path, drawn in 0.6 s unless reduced motion).
 const CIRCLE = '<svg class="pen" viewBox="0 0 120 48" preserveAspectRatio="none" aria-hidden="true"><path d="M14 30 C8 12 52 4 84 6 C110 8 118 22 110 34 C100 46 40 47 18 38 C6 33 9 17 30 11"/></svg>';
 function stamp(kind, text) {
@@ -265,11 +301,14 @@ function render(r, meta = {}) {
     $('explain').hidden = true;                   // nothing verified to explain
     $('paper').classList.add('retake');
     $('retakeTips').hidden = false;
+    // offer the cloud only for a fresh on-device read of a photo we still have
+    $('cloudRetry').hidden = !(meta.live && meta.source !== 'in_cloud' && lastBlob && navigator.onLine && !tooPoor());
     stamp('grey', 'Retake');
     show('s-result'); return;
   }
   $('paper').classList.remove('retake');
   $('retakeTips').hidden = true;
+  $('cloudRetry').hidden = true;
   $('checksSum').parentElement.hidden = false;
   $('explain').hidden = false;
   const pct = (v) => ((100 * v) / r.gross).toFixed(1) + '%';

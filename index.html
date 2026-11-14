@@ -71,9 +71,24 @@
     </label>
     <p id="device" class="hint"></p>
     <div class="about">
-      <p><b>Private by default.</b> Photos are read on this phone. Saved slips stay on this phone. Only line names (never the photo or the amounts) go to the cloud, and only when you tap Explain.</p>
+      <p><b>Private by default.</b> Slips are read on this device whenever it has on-device AI. A photo goes to the cloud only if you agree: when this device can't read it, or when its reading can't be verified. Saved slips stay on this phone. Explain sends only line names, never the photo or the amounts.</p>
       <p>SlipCheck checks arithmetic. It does not judge whether a fee is fair.</p>
     </div>
+  </section>
+
+  <!-- Ask before a photo leaves the device -->
+  <section id="s-consent" class="screen slip-screen" hidden>
+    <div class="paper">
+      <div class="paper-head"><span>READ IN THE CLOUD?</span><span id="consentWhy"></span></div>
+      <p id="consentText" class="consent-text"></p>
+      <ul class="consent-list">
+        <li>Only this photo is sent, once, through Firebase to Gemini.</li>
+        <li>SlipCheck does not store it. Your history stays on this phone.</li>
+        <li>The cloud's reading must pass the same arithmetic checks before you see a number.</li>
+      </ul>
+    </div>
+    <button id="cloudYes" class="btn cloud">Read it in the cloud</button>
+    <button id="cloudNo" class="btn">Not now</button>
   </section>
 
   <!-- Check the photo (orientation) -->
@@ -95,10 +110,10 @@
       <div class="scan"><img id="preview" alt="Your slip"><i class="scanline" aria-hidden="true"></i></div>
       <ol id="ticks" class="ticks" aria-live="polite"></ol>
     </div>
-    <p class="offline-big">No internet needed · read on this phone</p>
+    <p class="offline-big" id="readWhere">No internet needed · read on this device</p>
     <h2 id="readMsg">Reading on your device…</h2>
     <div class="prog"><span id="bar"></span></div>
-    <p class="hint"><span id="secs">0</span> s · usually 35–90 s · your photo never leaves the phone</p>
+    <p class="hint"><span id="secs">0</span> s · <span id="readNote">usually 35–90 s · your photo stays on this device</span></p>
   </section>
 
   <!-- Screen 2: result — the slip itself, marked up like an auditor's red pen -->
@@ -116,6 +131,7 @@
       <li><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="20" r="7"/><path d="M24 5v4M24 31v4M9 20h4M35 20h4M13.4 9.4l2.8 2.8M31.8 27.8l2.8 2.8M13.4 30.6l2.8-2.8M31.8 12.2l2.8-2.8"/><path d="M12 42h24"/></svg><b>Bright</b><span>daylight, no shadow</span></li>
       <li><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="13" y="8" width="22" height="30" rx="2"/><path d="M6 6v8M6 6h8M42 6v8M42 6h-8M6 42v-8M6 42h8M42 42v-8M42 42h-8"/></svg><b>Whole slip</b><span>straight on, all edges in</span></li>
     </ul></div>
+    <button id="cloudRetry" class="btn cloud" hidden>Read it in the cloud instead</button>
     <button id="speak" class="btn primary speak">🔊 Read it to me</button>
     <div class="row">
       <button id="again" class="btn">Scan another</button>
@@ -148,7 +164,7 @@
   <!-- Screen 3: cloud explain -->
   <section id="s-cloud" class="screen slip-screen" hidden>
     <div class="paper note-paper">
-      <div class="paper-head"><span>WHAT EACH LINE IS FOR</span><span>Explained in the cloud · only line names were sent</span></div>
+      <div class="paper-head"><span>WHAT EACH LINE IS FOR</span><span id="cloudHead">Explained in the cloud · only line names were sent</span></div>
       <p id="cloudMsg"></p>
     </div>
     <button id="back" class="btn">Back</button>

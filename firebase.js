@@ -30,14 +30,19 @@ const onDeviceParams = {
   promptOptions: { responseConstraint: SCHEMA },
 };
 
-const model = getGenerativeModel(getAI(app, { backend: new GoogleAIBackend() }), {
-  mode: InferenceMode.PREFER_ON_DEVICE,
-  onDeviceParams,
-  inCloudParams: {
-    model: 'gemini-3.5-flash-lite',
-    generationConfig: { responseMimeType: 'application/json', responseSchema: SCHEMA, temperature: 0 },
-  },
-});
+// Two readers over one Firebase AI Logic setup.
+// A settlement slip is a financial document, so reading never falls back to the cloud silently
+// (PREFER_ON_DEVICE would): the device reader is ONLY_ON_DEVICE, and the cloud reader runs only after the
+// user agrees (no on-device model here, or the on-device read could not be verified).
+const cloudParams = {
+  model: 'gemini-3.5-flash-lite',
+  generationConfig: { responseMimeType: 'application/json', responseSchema: SCHEMA, temperature: 0 },
+};
+const ai = getAI(app, { backend: new GoogleAIBackend() });
+const READERS = {
+  device: getGenerativeModel(ai, { mode: InferenceMode.ONLY_ON_DEVICE, onDeviceParams, inCloudParams: cloudParams }),
+  cloud: getGenerativeModel(ai, { mode: InferenceMode.ONLY_IN_CLOUD, inCloudParams: cloudParams }),
+};
 
 /** JPEG/PNG only on-device; also shrink big phone photos (faster on-device, smaller upload). */
 async function toJpegBase64(blob, maxSide = 1600) {
@@ -57,7 +62,8 @@ async function toJpegBase64(blob, maxSide = 1600) {
  * returns whatever was written — reconcile.js can salvage partial JSON.
  * @returns {{raw:string, stopped:string|null, via:'firebase-ai-logic', source:'on_device'|'in_cloud'|'unknown'}}
  */
-export async function extractViaFirebase(blob, { onChunk = () => {}, timeoutMs = 120000 } = {}) {
+export async function extractViaFirebase(blob, { onChunk = () => {}, timeoutMs = 120000, where = 'device' } = {}) {
+  const model = READERS[where];
   const data = await toJpegBase64(blob);
   const ac = new AbortController();
   const timer = setTimeout(() => ac.abort('timeout'), timeoutMs);
@@ -97,7 +103,7 @@ const EXPLAIN_SCHEMA = {
   },
   required: ['total_sale', 'you_received', 'share', 'meanings', 'mismatch'],
 };
-const explainer = getGenerativeModel(getAI(app, { backend: new GoogleAIBackend() }), {
+const explainer = getGenerativeModel(ai, {
   mode: InferenceMode.ONLY_IN_CLOUD,
   inCloudParams: { model: 'gemini-3.5-flash-lite',
     generationConfig: { temperature: 0.2, responseMimeType: 'application/json', responseSchema: EXPLAIN_SCHEMA } },
