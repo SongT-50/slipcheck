@@ -1,0 +1,116 @@
+{
+ "slip_ko.png": {
+  "currency": "KRW",
+  "items": [
+   {
+    "crop": "사과(부사)",
+    "unit": "10kg",
+    "qty": 40,
+    "unit_price": 38500,
+    "amount": 1540000
+   },
+   {
+    "crop": "배(신고)",
+    "unit": "15kg",
+    "qty": 20,
+    "unit_price": 42000,
+    "amount": 840000
+   }
+  ],
+  "gross": 2380000,
+  "stated_rate_pct": 7,
+  "deductions": {
+   "commission": 166600,
+   "handling": 36000,
+   "transport": 120000
+  },
+  "total_deductions": 322600,
+  "net": 2057400
+ },
+ "slip_ko_mismatch.png": {
+  "currency": "KRW",
+  "items": [
+   {
+    "crop": "사과(부사)",
+    "unit": "10kg",
+    "qty": 40,
+    "unit_price": 38500,
+    "amount": 1540000
+   },
+   {
+    "crop": "배(신고)",
+    "unit": "15kg",
+    "qty": 20,
+    "unit_price": 42000,
+    "amount": 840000
+   }
+  ],
+  "gross": 2380000,
+  "stated_rate_pct": 7,
+  "deductions": {
+   "commission": 181000,
+   "handling": 36000,
+   "transport": 120000
+  },
+  "total_deductions": 337000,
+  "net": 2043000
+ },
+ "slip_en.png": {
+  "currency": "INR",
+  "items": [
+   {
+    "crop": "Tomato",
+    "unit": "crate 25 kg",
+    "qty": 40,
+    "unit_price": 450,
+    "amount": 18000
+   },
+   {
+    "crop": "Onion",
+    "unit": "bag 50 kg",
+    "qty": 30,
+    "unit_price": 1150,
+    "amount": 34500
+   }
+  ],
+  "gross": 52500,
+  "stated_rate_pct": 6,
+  "deductions": {
+   "commission": 3150,
+   "market_fee": 525,
+   "hamali": 700,
+   "weighing": 140,
+   "transport": 1800
+  },
+  "total_deductions": 6315,
+  "net": 46185
+ },
+ "slip_es.png": {
+  "currency": "MXN",
+  "items": [
+   {
+    "crop": "Tomate saladette",
+    "unit": "caja 20 kg",
+    "qty": 60,
+    "unit_price": 185.0,
+    "amount": 11100.0
+   },
+   {
+    "crop": "Chile serrano",
+    "unit": "caja 10 kg",
+    "qty": 25,
+    "unit_price": 240.0,
+    "amount": 6000.0
+   }
+  ],
+  "gross": 17100.0,
+  "stated_rate_pct": 10,
+  "deductions": {
+   "commission": 1710.0,
+   "maniobras": 510.0,
+   "flete": 1200.0
+  },
+  "total_deductions": 3420.0,
+  "net": 13680.0
+ }
+}

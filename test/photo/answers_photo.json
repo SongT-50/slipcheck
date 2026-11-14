@@ -1,0 +1,86 @@
+{
+ "photo_mild_slip_ko.jpg": {
+  "gross": 2380000,
+  "total_deductions": 322600,
+  "net": 2057400,
+  "stated_rate_pct": 7,
+  "commission": 166600
+ },
+ "photo_hard_slip_ko.jpg": {
+  "gross": 2380000,
+  "total_deductions": 322600,
+  "net": 2057400,
+  "stated_rate_pct": 7,
+  "commission": 166600
+ },
+ "photo_mild_slip_ko_mismatch.jpg": {
+  "gross": 2380000,
+  "total_deductions": 337000,
+  "net": 2043000,
+  "stated_rate_pct": 7,
+  "commission": 181000
+ },
+ "photo_hard_slip_ko_mismatch.jpg": {
+  "gross": 2380000,
+  "total_deductions": 337000,
+  "net": 2043000,
+  "stated_rate_pct": 7,
+  "commission": 181000
+ },
+ "photo_mild_slip_en.jpg": {
+  "gross": 52500,
+  "total_deductions": 6315,
+  "net": 46185,
+  "stated_rate_pct": 6,
+  "commission": 3150
+ },
+ "photo_hard_slip_en.jpg": {
+  "gross": 52500,
+  "total_deductions": 6315,
+  "net": 46185,
+  "stated_rate_pct": 6,
+  "commission": 3150
+ },
+ "photo_mild_slip_es.jpg": {
+  "gross": 17100.0,
+  "total_deductions": 3420.0,
+  "net": 13680.0,
+  "stated_rate_pct": 10,
+  "commission": 1710.0
+ },
+ "photo_hard_slip_es.jpg": {
+  "gross": 17100.0,
+  "total_deductions": 3420.0,
+  "net": 13680.0,
+  "stated_rate_pct": 10,
+  "commission": 1710.0
+ },
+ "hw_en.jpg": {
+  "gross": 52500,
+  "total_deductions": 5650,
+  "net": 46850,
+  "stated_rate_pct": 6,
+  "commission": 3150
+ },
+ "hw_en_mismatch.jpg": {
+  "gross": 52500,
+  "total_deductions": 6100,
+  "net": 46400,
+  "stated_rate_pct": 6,
+  "commission": 3600
+ },
+ "hw_es.jpg": {
+  "gross": 17100.0,
+  "total_deductions": 3420.0,
+  "net": 13680.0,
+  "stated_rate_pct": 10,
+  "commission": 1710.0
+ },
+ "real_4.jpg": {
+  "gross": 2380000,
+  "total_deductions": 337000,
+  "net": 2043000,
+  "stated_rate_pct": 7,
+  "commission": 181000
+ }
+}

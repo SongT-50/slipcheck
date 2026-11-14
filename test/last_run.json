@@ -1,0 +1,85 @@
+{
+ "pass": 42,
+ "fail": 0,
+ "summary": {
+  "slip_en.png": {
+   "salvaged": false,
+   "gross": 52500,
+   "totalDeductions": 6315,
+   "net": 46185,
+   "netPerKg": 18.474,
+   "deductionShare": 0.12028571428571429,
+   "flagged": false,
+   "warnings": []
+  },
+  "slip_es.png": {
+   "salvaged": true,
+   "gross": 17100,
+   "totalDeductions": 3420,
+   "net": 13680,
+   "netPerKg": 9.434482758620689,
+   "deductionShare": 0.2,
+   "flagged": false,
+   "warnings": []
+  },
+  "slip_ko_mismatch.png": {
+   "salvaged": false,
+   "gross": 2380000,
+   "totalDeductions": 337000,
+   "net": 2043000,
+   "netPerKg": 2918.5714285714284,
+   "deductionShare": 0.14159663865546218,
+   "flagged": true,
+   "warnings": [
+    "stated 7% -> expected 166600.00, charged 181000 (= 7.61%)"
+   ]
+  },
+  "photo_mild_slip_es.jpg": {
+   "gross": 17100,
+   "totalDeductions": 3420,
+   "net": 13680,
+   "flagged": false,
+   "warnings": [
+    "read as 6000; 60 x 185 = 11100 matches the slip total — please look at the photo"
+   ]
+  },
+  "hw_en_mismatch.jpg": {
+   "gross": 52500,
+   "totalDeductions": 6100,
+   "net": 46400,
+   "flagged": true,
+   "warnings": [
+    "stated 6% -> expected 3150.00, charged 3600 (= 6.86%)",
+    "read as 46400 (the same as the net line); the slip's net implies 1800 — please look at the photo"
+   ]
+  },
+  "photo_hard_slip_ko.jpg": {
+   "gross": 2380000,
+   "totalDeductions": 322600,
+   "net": 2057400,
+   "flagged": false,
+   "warnings": [
+    "read as 166000; the slip's own totals imply 166600 — please look at the photo"
+   ]
+  },
+  "photo_mild_slip_ko_mismatch.jpg": {
+   "gross": 2380000,
+   "totalDeductions": 337000,
+   "net": 2043000,
+   "flagged": true,
+   "warnings": [
+    "stated 7% -> expected 166600.00, charged 181000 (= 7.61%)"
+   ]
+  },
+  "real_4.jpg": {
+   "gross": 2380000,
+   "totalDeductions": 337000,
+   "net": 2043000,
+   "flagged": true,
+   "warnings": [
+    "stated 7% -> expected 166600.00, charged 181000 (= 7.61%)",
+    "“공제 합계” reads 33700, but the lines above add up to 337000 and match the slip's net — please look at the photo"
+   ]
+  }
+ }
+}

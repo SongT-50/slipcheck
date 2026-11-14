@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SlipCheck</title>
+<meta name="description" content="Know what you actually got paid — even with no signal.">
+<meta name="theme-color" content="#2f6b4f">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">SlipCheck</div>
+  <div id="net" class="pill">…</div>
+</header>
+
+<main>
+  <!-- Screen 1: scan -->
+  <section id="s-scan" class="screen">
+    <h1>Know what you actually got paid.</h1>
+    <p class="sub">Photograph your sale settlement slip. It is read <b>on this device</b> — nothing leaves your phone.</p>
+    <label class="field">Currency
+      <select id="currency">
+        <option value="KRW|₩">₩ Korean won</option>
+        <option value="INR|Rs.">Rs. Indian rupee</option>
+        <option value="MXN|$">$ Mexican peso</option>
+        <option value="USD|$">$ US dollar</option>
+      </select>
+    </label>
+    <label class="btn primary" for="photo">Take photo</label>
+    <input id="photo" type="file" accept="image/*" capture="environment" hidden>
+    <div class="samples">
+      <span>Or try a sample slip:</span>
+      <button data-sample="samples/slip_ko_mismatch.png" data-cur="KRW|₩">Korea</button>
+      <button data-sample="samples/slip_en.png" data-cur="INR|Rs.">India</button>
+      <button data-sample="samples/slip_es.png" data-cur="MXN|$">Mexico</button>
+    </div>
+    <p id="device" class="hint"></p>
+    <div id="history" hidden>
+      <h2>Your past slips</h2>
+      <p class="hint">Saved on this device only.</p>
+      <button id="seasonBtn" class="btn" hidden>This season — where did my money go?</button>
+      <ul id="histList" class="hist"></ul>
+      <button id="histClear" class="link">Delete all</button>
+    </div>
+  </section>
+
+  <!-- Check the photo (orientation) -->
+  <section id="s-check" class="screen" hidden>
+    <h2>Is the writing upright?</h2>
+    <p class="sub">Turn the photo until you can read it. Sideways text cannot be read reliably.</p>
+    <img id="checkImg" alt="Your slip" class="check">
+    <div class="row">
+      <button id="turnL" class="btn" aria-label="Turn left">↺ Turn</button>
+      <button id="turnR" class="btn" aria-label="Turn right">Turn ↻</button>
+    </div>
+    <button id="readIt" class="btn primary">Read this slip</button>
+  </section>
+
+  <!-- Reading -->
+  <section id="s-read" class="screen" hidden>
+    <img id="preview" alt="Your slip">
+    <h2 id="readMsg">Reading on your device…</h2>
+    <div class="prog"><span id="bar"></span></div>
+    <p class="hint"><span id="secs">0</span> s · usually 35–90 s · works offline</p>
+  </section>
+
+  <!-- Screen 2: result -->
+  <section id="s-result" class="screen" hidden>
+    <p class="label">What you actually got</p>
+    <div id="netAmt" class="big"></div>
+    <p id="netSub" class="sub"></p>
+    <div id="stack" class="stack"></div>
+    <ul id="legend" class="legend"></ul>
+    <div id="alerts"></div>
+    <details><summary id="checksSum"></summary><ul id="checks" class="checks"></ul></details>
+    <p id="where" class="hint"></p>
+    <button id="speak" class="btn">🔊 Read it to me</button>
+    <div class="row">
+      <button id="again" class="btn">Scan another</button>
+      <button id="explain" class="btn cloud">Explain (cloud)</button>
+    </div>
+  </section>
+
+  <!-- Season ledger -->
+  <section id="s-season" class="screen" hidden>
+    <p class="label">This season, deductions took</p>
+    <div id="seasonDed" class="big red"></div>
+    <p id="seasonDedSub" class="sub"></p>
+    <p id="seasonSub" class="hint"></p>
+    <h2>By line</h2>
+    <ul id="seasonLabels" class="bars"></ul>
+    <div id="seasonAgentsWrap">
+      <h2>By agent — share of the sale deducted</h2>
+      <ul id="seasonAgents" class="bars agents"></ul>
+    </div>
+    <div id="seasonFlag" class="alert" hidden></div>
+    <p class="hint">Added up on this device from your saved slips. Nothing is uploaded.</p>
+    <button id="seasonBack" class="btn">Back</button>
+  </section>
+
+  <!-- Screen 3: cloud explain -->
+  <section id="s-cloud" class="screen" hidden>
+    <h2>Explain</h2>
+    <p id="cloudMsg" class="sub"></p>
+    <button id="back" class="btn">Back</button>
+  </section>
+</main>
+
+<footer>Sample slips are fictional. SlipCheck checks arithmetic; it does not judge whether a fee is fair.</footer>
+<script type="module" src="main.js"></script>
+</body>
+</html>
