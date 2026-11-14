@@ -4,6 +4,7 @@ import { guessTurns, turn, photoQuality } from './orient.js';
 import { saveSlip, updateSlip, listSlips, clearSlips, thumbnail } from './history.js';
 import { buildLedger } from './ledger.js';
 import { script, speak, stopSpeaking } from './speak.js';
+import { speakClips } from './voice.js';
 import { t, setLang, getLang, pickUiLang, applyI18n, LANGS } from './i18n.js';
 
 // ---- offline: cache the app so it opens with no signal ----
@@ -164,7 +165,8 @@ window.SLIPCHECK_EXPLAIN = { explainText }; // for testing
 // the voice follows the screen language the farmer chose (not the currency)
 $('speak').addEventListener('click', () => {
   const cur = (last?.currency || curSel.value).split('|')[0];
-  speak(script(last?.result, cur, getLang()), getLang());
+  // one recorded natural voice (Korean, English); other languages use the device's own voice
+  speakClips(last?.result, cur, getLang()).then((ok) => ok || speak(script(last?.result, cur, getLang()), getLang()));
 });
 
 /** The agent name the model copied from the top of the slip (optional field, used only to group the ledger). */

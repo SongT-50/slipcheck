@@ -1,0 +1,73 @@
+{
+  "_note": "Recorded voice clips for read-aloud (made once with ElevenLabs, see tools/make_voice.py). The app joins them offline; no voice service is called at run time.",
+  "ko": {
+    "voice": "Chris (ElevenLabs voice library)",
+    "phrases": {
+      "p_got": "받으신 돈은",
+      "p_end": "입니다.",
+      "p_sold": "판매 금액은",
+      "p_ded": "공제된 돈은",
+      "p_pct_pre": "판매 금액의",
+      "p_pct": "퍼센트입니다.",
+      "p_bad": "항목을 확인해 보세요. 적힌 비율로 계산한 금액과 실제로 뗀 금액이 다릅니다.",
+      "p_ok": "모든 줄의 계산이 맞습니다.",
+      "p_retake": "사진을 정확히 읽지 못했습니다. 다시 찍어 주세요."
+    },
+    "numbers": {
+      "d1": "일", "d2": "이", "d3": "삼", "d4": "사", "d5": "오", "d6": "육", "d7": "칠", "d8": "팔", "d9": "구", "d0": "영",
+      "x10_1": "십", "x10_2": "이십", "x10_3": "삼십", "x10_4": "사십", "x10_5": "오십", "x10_6": "육십", "x10_7": "칠십", "x10_8": "팔십", "x10_9": "구십",
+      "x100_1": "백", "x100_2": "이백", "x100_3": "삼백", "x100_4": "사백", "x100_5": "오백", "x100_6": "육백", "x100_7": "칠백", "x100_8": "팔백", "x100_9": "구백",
+      "x1000_1": "천", "x1000_2": "이천", "x1000_3": "삼천", "x1000_4": "사천", "x1000_5": "오천", "x1000_6": "육천", "x1000_7": "칠천", "x1000_8": "팔천", "x1000_9": "구천",
+      "man": "만", "eok": "억", "point": "점"
+    },
+    "currency": { "c_KRW": "원", "c_INR": "루피", "c_MXN": "페소", "c_USD": "달러" },
+    "labels": {
+      "l_commission": ["위탁수수료", "위탁수수료"],
+      "l_fee": ["수수료", "수수료"],
+      "l_handling": ["하역비", "하역비"],
+      "l_transport": ["운송비", "운송비"],
+      "l_freight": ["운임", "운임"],
+      "l_loading": ["상차비", "상차비"],
+      "l_unloading": ["하차비", "하차비"],
+      "l_sorting": ["선별비", "선별비"],
+      "l_packing": ["포장비", "포장비"],
+      "l_prep": ["준비비", "준비비"],
+      "l_market": ["시장사용료", "시장 사용료"],
+      "l_other": [null, "기타 공제"]
+    }
+  },
+  "en": {
+    "voice": "Allison (ElevenLabs voice library)",
+    "phrases": {
+      "p_got": "You received",
+      "p_sold": "You sold",
+      "p_ded": "was deducted, that is",
+      "p_pct": "percent.",
+      "p_check": "Please check",
+      "p_bad": "The amount taken does not match the rate on the slip.",
+      "p_ok": "Every line adds up.",
+      "p_retake": "This photo could not be read clearly. Please take it again."
+    },
+    "numbers": {
+      "w0": "zero", "w1": "one", "w2": "two", "w3": "three", "w4": "four", "w5": "five", "w6": "six", "w7": "seven", "w8": "eight", "w9": "nine",
+      "w10": "ten", "w11": "eleven", "w12": "twelve", "w13": "thirteen", "w14": "fourteen", "w15": "fifteen", "w16": "sixteen", "w17": "seventeen", "w18": "eighteen", "w19": "nineteen",
+      "w20": "twenty", "w30": "thirty", "w40": "forty", "w50": "fifty", "w60": "sixty", "w70": "seventy", "w80": "eighty", "w90": "ninety",
+      "hundred": "hundred", "thousand": "thousand", "million": "million", "billion": "billion", "point": "point"
+    },
+    "currency": { "c_KRW": "won", "c_INR": "rupees", "c_MXN": "pesos", "c_USD": "dollars" },
+    "labels": {
+      "l_commission": ["commission", "Commission"],
+      "l_marketfee": ["marketfee", "Market fee"],
+      "l_hamali": ["hamal", "Hamali, the labour charge"],
+      "l_weighing": ["weigh", "Weighing"],
+      "l_transport": ["transport", "Transport"],
+      "l_freight": ["freight", "Freight"],
+      "l_loading": ["loading", "Loading"],
+      "l_unloading": ["unloading", "Unloading"],
+      "l_packing": ["packing", "Packing"],
+      "l_handling": ["handling", "Handling"],
+      "l_cess": ["cess", "Market cess"],
+      "l_other": [null, "Another deduction"]
+    }
+  }
+}

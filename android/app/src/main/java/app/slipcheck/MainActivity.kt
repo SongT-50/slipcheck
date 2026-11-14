@@ -126,6 +126,7 @@ class MainActivity : ComponentActivity() {
     web.settings.javaScriptEnabled = true
     web.settings.domStorageEnabled = true
     web.settings.allowFileAccess = false
+    web.settings.mediaPlaybackRequiresUserGesture = false  // the read-aloud clips play one after another
     web.webViewClient = object : WebViewClient() {
       override fun shouldInterceptRequest(view: WebView, req: WebResourceRequest) = assets.shouldInterceptRequest(req.url)
     }

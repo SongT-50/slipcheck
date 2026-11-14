@@ -79,3 +79,11 @@ and only the model call changes. Reading goes through **Firebase AI Logic for An
 - Build: add your own `android/app/google-services.json` (Firebase console → Android app `app.slipcheck`), then
   `cd android && ./gradlew assembleDebug`. App Check uses the debug provider in this build; register the debug token
   that the app prints to logcat.
+
+## Read-aloud voice
+
+Korean and English are read in one natural recorded voice (ElevenLabs voice library: Chris for Korean, Allison for
+English). The clips — digits and number words, currency words, fixed phrases and common deduction names — were
+recorded **once** with `tools/make_voice.py` and ship in `voice/`. The app decides what to say from the checked
+numbers and joins the clips on the device (`voice.js`), offline; it never calls a voice service, and no AI runs here.
+A deduction name with no recording is read as "another deduction". Spanish and Hindi use the device's own voice.

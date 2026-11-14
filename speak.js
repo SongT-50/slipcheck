@@ -81,4 +81,5 @@ export function speak(lines, lang) {
   }
   return true;
 }
-export const stopSpeaking = () => { try { if (self.SlipNative) self.SlipNative.stopSpeak(); else speechSynthesis.cancel(); } catch (_) {} };
+import { stopClips } from './voice.js';
+export const stopSpeaking = () => { stopClips(); try { if (self.SlipNative) self.SlipNative.stopSpeak(); else speechSynthesis.cancel(); } catch (_) {} };

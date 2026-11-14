@@ -12,7 +12,7 @@ kotlin { compilerOptions { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarg
 // The screens and the math are the web app's own files (repo root), copied in at build time: one engine, two platforms.
 val copyWeb by tasks.registering(Copy::class) {
   from(rootDir.parentFile) {
-    include("*.html", "*.js", "*.css", "*.png", "samples/**")
+    include("*.html", "*.js", "*.css", "*.png", "samples/**", "voice/**")
     exclude("sw.js", "firebase.js", "firebase-config.js")
   }
   into(layout.buildDirectory.dir("web/www"))
