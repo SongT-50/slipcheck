@@ -1,4 +1,4 @@
-# SlipCheck — know what you actually got paid, even with no signal
+# SlipCheck — know what you actually got paid, and which agent takes more
 
 Hundreds of millions of small farmers sell their produce through commission agents. What they get back is a paper settlement slip: what was sold, what was deducted, what is left. SlipCheck reads that slip **on the device** and checks the arithmetic, so a farmer can see what they really received and which line does not add up. It works with no connection.
 
@@ -28,10 +28,12 @@ A settlement slip is a financial document, so SlipCheck does **not** use `PREFER
 
 On-device reading needs desktop Chrome with Gemini Nano (Chrome's built-in model; check `chrome://on-device-internals`). That makes the private, offline path a fit for a farmers' group or market office laptop that checks members' slips; on a phone the same app works through the consented cloud path.
 
+Two ways to use it: on a **farmers' group or market office PC** with Chrome's on-device model, everything stays on the PC and works offline; on a **farmer's own phone**, SlipCheck asks before reading a slip in the cloud.
+
 More, all on the device:
 - **Check the photo first.** Sideways text makes a small model invent a different slip whose numbers still add up, so SlipCheck detects a sideways photo from its table lines, turns it, and asks for one tap before reading.
 - **It never accuses on a slip it could not verify.** If the lines and the printed totals cannot be reconciled, it reads once more; if it still cannot, it asks for a new photo instead of showing a number.
-- **Season ledger.** Every verified slip is added up: how much deductions took this season, by line and by agent.
+- **Season ledger: which agent takes more.** Every verified slip is added up: how much deductions took this season, by line, and the share of the sale each agent deducted.
 - **Read it to me.** The result is spoken in the farmer's language with the device's own voice. The sentences are built by code from the verified numbers.
 - **In the farmer's language.** Screens and read-aloud in English, 한국어, Español and हिन्दी (phone language by default, changeable in Settings). Labels on the slip stay as printed.
 
