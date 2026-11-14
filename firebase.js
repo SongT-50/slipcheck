@@ -26,6 +26,8 @@ if (LOCAL || recaptchaSiteKey) {
 // so a fresh AbortSignal can be set per slip.
 const onDeviceParams = {
   createOptions: {
+    // The prompt and the JSON keys are English, so English is declared. Values are copied as printed, in the
+    // slip's own script; Korean, English and Spanish slips are in the regression tests.
     expectedInputs: [{ type: 'image' }, { type: 'text', languages: ['en'] }],
     expectedOutputs: [{ type: 'text', languages: ['en'] }],
   },
