@@ -24,7 +24,7 @@ SlipCheck checks arithmetic. It does not judge whether a fee is fair.
 
 ## Firebase products used
 - **Firebase AI Logic** — hybrid on-device (Gemini Nano) + cloud (Gemini Developer API)
-- **App Check** — reCAPTCHA v3 on the hosted site, debug provider on localhost
+- **App Check** — reCAPTCHA Enterprise (Fraud Defense) on the hosted site, debug provider on localhost
 - **Firebase Hosting**
 
 ## Run locally

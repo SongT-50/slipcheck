@@ -2,7 +2,7 @@
 // On a device with Gemini Nano the slip is read on-device (nothing is uploaded).
 // Without it, the same call falls back to Gemini in the cloud, guarded by App Check.
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js';
-import { initializeAppCheck, ReCaptchaV3Provider } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-app-check.js';
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-app-check.js';
 import { getAI, getGenerativeModel, GoogleAIBackend, InferenceMode } from 'https://www.gstatic.com/firebasejs/13.2.0/firebase-ai.js';
 import { firebaseConfig, recaptchaSiteKey } from './firebase-config.js';
 import { SCHEMA, PROMPT } from './extract.js';
@@ -15,7 +15,7 @@ const LOCAL = ['localhost', '127.0.0.1'].includes(location.hostname);
 if (LOCAL) self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
 if (LOCAL || recaptchaSiteKey) {
   initializeAppCheck(app, {
-    provider: new ReCaptchaV3Provider(recaptchaSiteKey || 'debug-only'),
+    provider: new ReCaptchaEnterpriseProvider(recaptchaSiteKey || 'debug-only'),
     isTokenAutoRefreshEnabled: true,
   });
 }
